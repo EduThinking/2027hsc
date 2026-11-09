@@ -111,12 +111,17 @@ function updateStageStates() {
 }
 
 // 캐릭터 이동
-function moveCharacter() {
+function moveCharacter(animate = false) {
   const character = document.getElementById('character');
   if (!character) return;
 
   const targetStage = gameState.completedStages.length;
   const pos = stagePositions[targetStage] || stagePositions[0];
+
+  if (animate) {
+    character.classList.add('moving');
+    setTimeout(() => character.classList.remove('moving'), 400);
+  }
 
   character.style.left = pos.left || 'auto';
   character.style.right = pos.right || 'auto';
@@ -213,31 +218,40 @@ function setupQuizHandlers() {
       const isCorrect = this.dataset.answer === 'correct';
       const stageNum = parseInt(quizId.split('-')[0]);
 
-      // 이미 답변한 경우 무시
-      if (quizItem.querySelector('.quiz-option.correct, .quiz-option.wrong')) {
+      // 이미 정답을 맞춘 경우 무시
+      if (quizItem.querySelector('.quiz-option.correct')) {
         return;
       }
+
+      // 이전 오답 표시 제거
+      quizItem.querySelectorAll('.quiz-option.wrong').forEach(opt => {
+        opt.classList.remove('wrong');
+      });
 
       // 답변 표시
       if (isCorrect) {
         this.classList.add('correct');
         quizItem.querySelector('.quiz-feedback').textContent = '✅ 정답!';
+        quizItem.querySelector('.quiz-feedback').style.color = '#16a34a';
         gameState.stageData[stageNum].quizScores[quizId] = true;
+        // 정답 맞추면 다른 옵션 비활성화
+        quizItem.querySelectorAll('.quiz-option').forEach(opt => {
+          opt.disabled = true;
+        });
       } else {
         this.classList.add('wrong');
-        quizItem.querySelector('.quiz-feedback').textContent = '❌ 다시 생각해보세요';
-        // 정답 표시
-        quizItem.querySelectorAll('.quiz-option').forEach(opt => {
-          if (opt.dataset.answer === 'correct') {
-            opt.classList.add('correct');
+        quizItem.querySelector('.quiz-feedback').textContent = '❌ 다시 시도해보세요!';
+        quizItem.querySelector('.quiz-feedback').style.color = '#dc2626';
+        // 틀리면 이 버튼만 잠시 비활성화
+        this.disabled = true;
+        setTimeout(() => {
+          if (!quizItem.querySelector('.quiz-option.correct')) {
+            this.disabled = false;
+            this.classList.remove('wrong');
+            quizItem.querySelector('.quiz-feedback').textContent = '';
           }
-        });
+        }, 1000);
       }
-
-      // 모든 옵션 비활성화
-      quizItem.querySelectorAll('.quiz-option').forEach(opt => {
-        opt.disabled = true;
-      });
 
       saveState();
       updateQuizScore(stageNum);
@@ -439,7 +453,9 @@ function completeQuest(stageNum) {
   }
 
   closeQuest();
-  updateUI();
+  updateProgress();
+  updateStageStates();
+  moveCharacter(true); // 애니메이션과 함께 이동
 
   // 성공 모달
   const successModal = document.getElementById('success-modal');
