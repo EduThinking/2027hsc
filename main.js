@@ -1,6 +1,6 @@
 // 진로 퀘스트 - 6단계 맵 게임
 
-const STORAGE_KEY = 'career_quest_v2';
+const STORAGE_KEY = 'career_quest_v3';
 
 // 게임 상태
 let gameState = {
