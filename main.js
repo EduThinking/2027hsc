@@ -676,3 +676,12 @@ function showToast(message) {
     setTimeout(() => toast.remove(), 300);
   }, 2000);
 }
+
+// 게임 리셋
+function resetGame() {
+  if (confirm('정말 처음부터 다시 시작할까요? 모든 진행 상황이 삭제됩니다.')) {
+    localStorage.removeItem(STORAGE_KEY);
+    location.reload();
+  }
+}
+window.resetGame = resetGame;
