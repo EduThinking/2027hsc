@@ -3,23 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#fdf6e3">
+  <meta name="theme-color" content="#1a1a2e">
   <meta name="description" content="진로 퀘스트 - 6단계 퀘스트를 클리어하고 나만의 고교학점제 로드맵을 완성하세요!">
-  <title>진로 퀘스트 🎓 | 고교학점제 진로 설계</title>
+  <title>진로 퀘스트 🏰 | 고교학점제 진로 설계</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- BGM 컨트롤 -->
+  <div class="bgm-control">
+    <button class="bgm-btn" id="bgm-btn" onclick="toggleBGM()">
+      <span class="bgm-icon">🔇</span>
+    </button>
+  </div>
+  <audio id="bgm" loop>
+    <source src="https://cdn.pixabay.com/audio/2022/10/25/audio_244e5f5ffe.mp3" type="audio/mpeg">
+  </audio>
+
   <!-- 인트로 -->
   <section class="intro" id="intro">
+    <div class="stars"></div>
+    <div class="twinkling"></div>
     <div class="intro-content">
-      <div class="intro-badge">🎓 고교학점제 진로 설계</div>
-      <h1 class="intro-title">진로 퀘스트</h1>
-      <p class="intro-subtitle">6개의 퀘스트를 클리어하고<br>나만의 진로 로드맵을 완성하세요!</p>
-      <button class="start-btn" onclick="scrollToMap()">
-        <span>🚀 시작하기</span>
+      <div class="magic-sparkle">✨</div>
+      <div class="intro-badge">🏰 진로 마법학교</div>
+      <h1 class="intro-title">CAREER QUEST</h1>
+      <p class="intro-subtitle">6개의 마법 퀘스트를 클리어하고<br>나만의 진로 로드맵을 완성하세요!</p>
+      <button class="start-btn" onclick="startGame()">
+        <span>🪄 모험 시작하기</span>
       </button>
       <button class="reset-btn" onclick="resetGame()">🔄 처음부터 다시하기</button>
     </div>
@@ -28,8 +41,9 @@
   <!-- 게임 맵 -->
   <section class="map-section" id="map">
     <div class="map-header">
+      <h2 class="map-title">🏰 진로 마법학교</h2>
       <div class="progress-info">
-        <span class="progress-label">진행률</span>
+        <span class="progress-label">마법 진행률</span>
         <div class="progress-bar">
           <div class="progress-fill" id="progress-fill"></div>
         </div>
@@ -38,79 +52,100 @@
     </div>
 
     <div class="map-container">
-      <!-- 맵 배경 그리드 -->
-      <div class="map-grid"></div>
+      <!-- 마법 파티클 -->
+      <div class="magic-particles"></div>
 
-      <!-- 경로 라인 -->
+      <!-- 경로 라인 (마법 빛 효과) -->
       <svg class="path-line" viewBox="0 0 1000 600" preserveAspectRatio="none">
-        <path class="quest-path" d="M 100,500 Q 200,500 250,400 T 400,350 T 550,250 T 700,200 T 850,100 T 900,50" />
+        <defs>
+          <linearGradient id="magicGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#f472b6;stop-opacity:0.8" />
+            <stop offset="50%" style="stop-color:#a78bfa;stop-opacity:0.8" />
+            <stop offset="100%" style="stop-color:#60a5fa;stop-opacity:0.8" />
+          </linearGradient>
+        </defs>
+        <path class="quest-path" d="M 80,520 C 150,480 200,420 280,400 S 380,340 450,320 S 550,260 620,240 S 720,180 780,160 S 880,100 920,60" />
       </svg>
 
       <!-- 스테이지들 -->
       <div class="stage stage-start" data-stage="0">
-        <div class="stage-marker">🏁</div>
-        <div class="stage-label">START</div>
+        <div class="stage-marker">🚪</div>
+        <div class="stage-label">입학</div>
       </div>
 
       <div class="stage stage-1" data-stage="1" onclick="openQuest(1)">
-        <div class="stage-number">1</div>
-        <div class="stage-icon">📘</div>
-        <div class="stage-title">고교학점제 이해</div>
+        <div class="stage-glow"></div>
+        <div class="stage-number">I</div>
+        <div class="stage-icon">📜</div>
+        <div class="stage-title">마법 기초</div>
+        <div class="stage-desc">고교학점제 이해</div>
         <div class="stage-status" id="status-1"></div>
       </div>
 
       <div class="stage stage-2 locked" data-stage="2" onclick="openQuest(2)">
-        <div class="stage-number">2</div>
-        <div class="stage-icon">🔍</div>
-        <div class="stage-title">나의 계열 탐색</div>
+        <div class="stage-glow"></div>
+        <div class="stage-number">II</div>
+        <div class="stage-icon">🔮</div>
+        <div class="stage-title">자아 발견</div>
+        <div class="stage-desc">나의 계열 탐색</div>
         <div class="stage-status" id="status-2">🔒</div>
       </div>
 
       <div class="stage stage-3 locked" data-stage="3" onclick="openQuest(3)">
-        <div class="stage-number">3</div>
-        <div class="stage-icon">💪</div>
-        <div class="stage-title">핵심역량 체크</div>
+        <div class="stage-glow"></div>
+        <div class="stage-number">III</div>
+        <div class="stage-icon">⚡</div>
+        <div class="stage-title">능력 각성</div>
+        <div class="stage-desc">핵심역량 체크</div>
         <div class="stage-status" id="status-3">🔒</div>
       </div>
 
       <div class="stage stage-4 locked" data-stage="4" onclick="openQuest(4)">
-        <div class="stage-number">4</div>
-        <div class="stage-icon">📋</div>
-        <div class="stage-title">교육과정표 읽기</div>
+        <div class="stage-glow"></div>
+        <div class="stage-number">IV</div>
+        <div class="stage-icon">📖</div>
+        <div class="stage-title">지식의 탑</div>
+        <div class="stage-desc">교육과정표 읽기</div>
         <div class="stage-status" id="status-4">🔒</div>
       </div>
 
       <div class="stage stage-5 locked" data-stage="5" onclick="openQuest(5)">
-        <div class="stage-number">5</div>
-        <div class="stage-icon">📚</div>
-        <div class="stage-title">과목 선택하기</div>
+        <div class="stage-glow"></div>
+        <div class="stage-number">V</div>
+        <div class="stage-icon">🧪</div>
+        <div class="stage-title">마법 조합</div>
+        <div class="stage-desc">과목 선택하기</div>
         <div class="stage-status" id="status-5">🔒</div>
       </div>
 
       <div class="stage stage-6 locked" data-stage="6" onclick="openQuest(6)">
-        <div class="stage-number">6</div>
-        <div class="stage-icon">📝</div>
-        <div class="stage-title">학업계획서 작성</div>
+        <div class="stage-glow"></div>
+        <div class="stage-number">VI</div>
+        <div class="stage-icon">🗺️</div>
+        <div class="stage-title">미래 설계</div>
+        <div class="stage-desc">학업계획서 작성</div>
         <div class="stage-status" id="status-6">🔒</div>
       </div>
 
       <div class="stage stage-goal locked" data-stage="7">
-        <div class="stage-marker">🏆</div>
-        <div class="stage-label">SUCCESS!</div>
+        <div class="stage-marker">👑</div>
+        <div class="stage-label">졸업!</div>
       </div>
 
-      <!-- 캐릭터 -->
+      <!-- 캐릭터 (마법사) -->
       <div class="character" id="character">
-        <span>🧑‍🎓</span>
+        <span>🧙</span>
       </div>
 
-      <!-- 장식 요소들 -->
-      <div class="deco deco-tree1">🌳</div>
-      <div class="deco deco-tree2">🌲</div>
-      <div class="deco deco-house">🏠</div>
-      <div class="deco deco-school">🏫</div>
-      <div class="deco deco-lamp">💡</div>
-      <div class="deco deco-book">📖</div>
+      <!-- 마법학교 장식 요소들 -->
+      <div class="deco deco-castle">🏰</div>
+      <div class="deco deco-tower">🗼</div>
+      <div class="deco deco-moon">🌙</div>
+      <div class="deco deco-star1">⭐</div>
+      <div class="deco deco-star2">✨</div>
+      <div class="deco deco-owl">🦉</div>
+      <div class="deco deco-cat">🐈‍⬛</div>
+      <div class="deco deco-potion">🧪</div>
     </div>
   </section>
 

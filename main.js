@@ -701,3 +701,50 @@ function resetGame() {
   }
 }
 window.resetGame = resetGame;
+
+// BGM 관련
+let bgmPlaying = false;
+
+function toggleBGM() {
+  const bgm = document.getElementById('bgm');
+  const btn = document.getElementById('bgm-btn');
+  const icon = btn?.querySelector('.bgm-icon');
+
+  if (!bgm) return;
+
+  if (bgmPlaying) {
+    bgm.pause();
+    bgmPlaying = false;
+    btn?.classList.remove('playing');
+    if (icon) icon.textContent = '🔇';
+  } else {
+    bgm.volume = 0.3;
+    bgm.play().catch(e => console.log('BGM 재생 실패:', e));
+    bgmPlaying = true;
+    btn?.classList.add('playing');
+    if (icon) icon.textContent = '🔊';
+  }
+}
+window.toggleBGM = toggleBGM;
+
+// 게임 시작 (인트로에서 맵으로)
+function startGame() {
+  scrollToMap();
+  // 자동으로 BGM 시작 시도
+  const bgm = document.getElementById('bgm');
+  const btn = document.getElementById('bgm-btn');
+  const icon = btn?.querySelector('.bgm-icon');
+
+  if (bgm && !bgmPlaying) {
+    bgm.volume = 0.3;
+    bgm.play().then(() => {
+      bgmPlaying = true;
+      btn?.classList.add('playing');
+      if (icon) icon.textContent = '🔊';
+    }).catch(e => {
+      // 사용자 상호작용 필요 - 조용히 실패
+      console.log('BGM 자동재생 불가 - 버튼 클릭 필요');
+    });
+  }
+}
+window.startGame = startGame;
