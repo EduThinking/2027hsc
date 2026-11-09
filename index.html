@@ -3,310 +3,613 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0a0a0f">
-  <meta name="description" content="진로 방탈출 - 3개의 미션을 클리어하고 나만의 진로를 찾아 탈출하세요!">
-  <title>진로 방탈출 🚪 | 고교학점제 진로 설계</title>
+  <meta name="theme-color" content="#fdf6e3">
+  <meta name="description" content="진로 퀘스트 - 6단계 퀘스트를 클리어하고 나만의 고교학점제 로드맵을 완성하세요!">
+  <title>진로 퀘스트 🎓 | 고교학점제 진로 설계</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- 인트로 섹션 -->
-  <section class="hero" id="hero">
-    <div class="hero-content">
-      <div class="badge">🎓 고교학점제 진로 설계</div>
-      <h1 class="hero-title">
-        <span class="glow">진로 방탈출</span>
-      </h1>
-      <p class="hero-subtitle">
-        3개의 방을 탈출하고<br>
-        나만의 진로를 찾아보세요
-      </p>
-      <div class="scroll-hint">
-        <span>스크롤해서 시작하기</span>
-        <div class="scroll-arrow">↓</div>
-      </div>
-    </div>
-    <div class="hero-bg"></div>
-  </section>
-
-  <!-- 시나리오 섹션 -->
-  <section class="scenario" id="scenario">
-    <div class="scenario-content">
-      <div class="scenario-badge">📋 시나리오</div>
-      <h2 class="scenario-title">고등학교 입학을 앞둔<br>당신에게 미션이 주어졌습니다</h2>
-
-      <div class="story-cards">
-        <div class="story-card" data-aos="fade-up">
-          <div class="story-emoji">😰</div>
-          <p>"과목을 선택하라는데...<br>뭘 골라야 할지 모르겠어"</p>
-        </div>
-        <div class="story-card" data-aos="fade-up" data-delay="200">
-          <div class="story-emoji">🤔</div>
-          <p>"내가 뭘 좋아하는지,<br>뭘 잘하는지도 잘 모르겠고"</p>
-        </div>
-        <div class="story-card" data-aos="fade-up" data-delay="400">
-          <div class="story-emoji">💡</div>
-          <p>"진로 방탈출을 통해<br>나를 찾아가는 여정을 시작하세요!"</p>
-        </div>
-      </div>
-
-      <div class="mission-intro">
-        <p class="mission-text">
-          <strong>3개의 방</strong>을 탈출하면<br>
-          나만의 <strong>맞춤 과목 추천</strong>과<br>
-          <strong>진로 로드맵</strong>을 받을 수 있어요!
-        </p>
-      </div>
+  <!-- 인트로 -->
+  <section class="intro" id="intro">
+    <div class="intro-content">
+      <div class="intro-badge">🎓 고교학점제 진로 설계</div>
+      <h1 class="intro-title">진로 퀘스트</h1>
+      <p class="intro-subtitle">6개의 퀘스트를 클리어하고<br>나만의 진로 로드맵을 완성하세요!</p>
+      <button class="start-btn" onclick="scrollToMap()">
+        <span>🚀 시작하기</span>
+      </button>
     </div>
   </section>
 
-  <!-- 게임 HUD -->
-  <section class="game-section" id="game">
-    <div class="game-hud">
-      <div class="hud-timer">
-        <span class="timer-icon">⏱️</span>
-        <span class="timer-display" id="timer">30:00</span>
-      </div>
-      <div class="hud-stage">
-        <span class="stage-label">STAGE</span>
-        <span class="stage-value" id="stage">0 / 3</span>
-      </div>
-      <div class="hud-progress">
+  <!-- 게임 맵 -->
+  <section class="map-section" id="map">
+    <div class="map-header">
+      <div class="progress-info">
+        <span class="progress-label">진행률</span>
         <div class="progress-bar">
-          <div class="progress-fill" id="progress" style="width: 0%"></div>
+          <div class="progress-fill" id="progress-fill"></div>
         </div>
+        <span class="progress-text" id="progress-text">0 / 6</span>
       </div>
     </div>
 
-    <!-- 방 카드들 -->
-    <div class="rooms-container">
-      <!-- 방 1: 나를 찾는 방 -->
-      <div class="room-card room-1" id="room1" data-room="1">
-        <div class="room-lock" id="lock1">
-          <span class="lock-icon">🔓</span>
-        </div>
-        <div class="room-number">ROOM 1</div>
-        <div class="room-icon">🔍</div>
-        <h3 class="room-title">나를 찾는 방</h3>
-        <p class="room-desc">나의 강점, 흥미, 가치관을 발견해요</p>
-        <div class="room-missions">
-          <div class="mission-item">✨ 나의 꿈 탐색하기</div>
-          <div class="mission-item">💪 강점 발견하기</div>
-          <div class="mission-item">❤️ 좋아하는 것 정리하기</div>
-        </div>
-        <button class="room-btn" onclick="enterRoom(1)">입장하기</button>
+    <div class="map-container">
+      <!-- 맵 배경 그리드 -->
+      <div class="map-grid"></div>
+
+      <!-- 경로 라인 -->
+      <svg class="path-line" viewBox="0 0 1000 600" preserveAspectRatio="none">
+        <path class="quest-path" d="M 100,500 Q 200,500 250,400 T 400,350 T 550,250 T 700,200 T 850,100 T 900,50" />
+      </svg>
+
+      <!-- 스테이지들 -->
+      <div class="stage stage-start" data-stage="0">
+        <div class="stage-marker">🏁</div>
+        <div class="stage-label">START</div>
       </div>
 
-      <!-- 방 2: 직업을 탐험하는 방 -->
-      <div class="room-card room-2 locked" id="room2" data-room="2">
-        <div class="room-lock" id="lock2">
-          <span class="lock-icon">🔒</span>
-        </div>
-        <div class="room-number">ROOM 2</div>
-        <div class="room-icon">🗺️</div>
-        <h3 class="room-title">직업 탐험의 방</h3>
-        <p class="room-desc">다양한 직업 세계를 탐험해요</p>
-        <div class="room-missions">
-          <div class="mission-item">🔬 과학기술 분야</div>
-          <div class="mission-item">🎨 예술문화 분야</div>
-          <div class="mission-item">💼 비즈니스 분야</div>
-        </div>
-        <button class="room-btn" disabled>🔒 ROOM 1 클리어 필요</button>
+      <div class="stage stage-1" data-stage="1" onclick="openQuest(1)">
+        <div class="stage-number">1</div>
+        <div class="stage-icon">📘</div>
+        <div class="stage-title">고교학점제 이해</div>
+        <div class="stage-status" id="status-1"></div>
       </div>
 
-      <!-- 방 3: 과목을 선택하는 방 -->
-      <div class="room-card room-3 locked" id="room3" data-room="3">
-        <div class="room-lock" id="lock3">
-          <span class="lock-icon">🔒</span>
-        </div>
-        <div class="room-number">ROOM 3</div>
-        <div class="room-icon">📚</div>
-        <h3 class="room-title">과목 선택의 방</h3>
-        <p class="room-desc">고교학점제 과목을 선택해요</p>
-        <div class="room-missions">
-          <div class="mission-item">📖 공통과목 이해하기</div>
-          <div class="mission-item">🎯 선택과목 고르기</div>
-          <div class="mission-item">⚡ 3년 로드맵 완성</div>
-        </div>
-        <button class="room-btn" disabled>🔒 ROOM 2 클리어 필요</button>
+      <div class="stage stage-2 locked" data-stage="2" onclick="openQuest(2)">
+        <div class="stage-number">2</div>
+        <div class="stage-icon">🔍</div>
+        <div class="stage-title">나의 계열 탐색</div>
+        <div class="stage-status" id="status-2">🔒</div>
       </div>
+
+      <div class="stage stage-3 locked" data-stage="3" onclick="openQuest(3)">
+        <div class="stage-number">3</div>
+        <div class="stage-icon">💪</div>
+        <div class="stage-title">핵심역량 체크</div>
+        <div class="stage-status" id="status-3">🔒</div>
+      </div>
+
+      <div class="stage stage-4 locked" data-stage="4" onclick="openQuest(4)">
+        <div class="stage-number">4</div>
+        <div class="stage-icon">📋</div>
+        <div class="stage-title">교육과정표 읽기</div>
+        <div class="stage-status" id="status-4">🔒</div>
+      </div>
+
+      <div class="stage stage-5 locked" data-stage="5" onclick="openQuest(5)">
+        <div class="stage-number">5</div>
+        <div class="stage-icon">📚</div>
+        <div class="stage-title">과목 선택하기</div>
+        <div class="stage-status" id="status-5">🔒</div>
+      </div>
+
+      <div class="stage stage-6 locked" data-stage="6" onclick="openQuest(6)">
+        <div class="stage-number">6</div>
+        <div class="stage-icon">📝</div>
+        <div class="stage-title">학업계획서 작성</div>
+        <div class="stage-status" id="status-6">🔒</div>
+      </div>
+
+      <div class="stage stage-goal locked" data-stage="7">
+        <div class="stage-marker">🏆</div>
+        <div class="stage-label">SUCCESS!</div>
+      </div>
+
+      <!-- 캐릭터 -->
+      <div class="character" id="character">
+        <span>🧑‍🎓</span>
+      </div>
+
+      <!-- 장식 요소들 -->
+      <div class="deco deco-tree1">🌳</div>
+      <div class="deco deco-tree2">🌲</div>
+      <div class="deco deco-house">🏠</div>
+      <div class="deco deco-school">🏫</div>
+      <div class="deco deco-lamp">💡</div>
+      <div class="deco deco-book">📖</div>
     </div>
   </section>
 
-  <!-- 고교학점제 설명 섹션 -->
-  <section class="info-section" id="info">
-    <div class="info-content">
-      <div class="info-badge">📘 고교학점제란?</div>
-      <h2 class="info-title">내가 원하는 과목을<br>직접 선택하는 제도</h2>
-
-      <div class="info-cards">
-        <div class="info-card">
-          <div class="info-icon">🎯</div>
-          <h4>선택의 자유</h4>
-          <p>진로에 맞는 과목을 직접 선택</p>
-        </div>
-        <div class="info-card">
-          <div class="info-icon">📊</div>
-          <h4>학점 이수</h4>
-          <p>192학점 이상 이수하면 졸업</p>
-        </div>
-        <div class="info-card">
-          <div class="info-icon">🏫</div>
-          <h4>다양한 수업</h4>
-          <p>다른 학교, 온라인에서도 수강 가능</p>
-        </div>
+  <!-- 퀘스트 1: 고교학점제 이해 -->
+  <div class="quest-modal" id="quest-1" hidden>
+    <div class="quest-content">
+      <div class="quest-header">
+        <div class="quest-badge">STAGE 1</div>
+        <h2>📘 고교학점제 이해하기</h2>
+        <button class="quest-close" onclick="closeQuest()">&times;</button>
       </div>
-    </div>
-  </section>
-
-  <!-- 보상 섹션 -->
-  <section class="reward-section" id="reward">
-    <div class="reward-content">
-      <div class="reward-badge">🎁 탈출 보상</div>
-      <h2 class="reward-title">모든 방을 클리어하면</h2>
-
-      <div class="reward-cards">
-        <div class="reward-card gold">
-          <div class="reward-icon">📋</div>
-          <h4>맞춤 과목 추천서</h4>
-          <p>나의 진로에 맞는 과목 리스트</p>
-        </div>
-        <div class="reward-card silver">
-          <div class="reward-icon">🗓️</div>
-          <h4>3년 로드맵</h4>
-          <p>학년별 과목 선택 가이드</p>
-        </div>
-        <div class="reward-card bronze">
-          <div class="reward-icon">🏆</div>
-          <h4>진로 탐색 인증서</h4>
-          <p>탈출 성공 기념 인증서</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 시작 버튼 -->
-  <section class="cta-section">
-    <button class="cta-btn" onclick="startGame()">
-      <span class="cta-icon">🚀</span>
-      <span class="cta-text">지금 시작하기</span>
-    </button>
-    <p class="cta-note">약 30분 소요 · 언제든 저장 가능</p>
-  </section>
-
-  <!-- 방 1 모달 -->
-  <div class="room-modal" id="room1-modal" hidden>
-    <div class="modal-content room-modal-content">
-      <div class="modal-header">
-        <div class="modal-room-info">
-          <span class="modal-room-number">ROOM 1</span>
-          <h2>나를 찾는 방</h2>
-        </div>
-        <button class="modal-close" onclick="closeRoom()">&times;</button>
-      </div>
-
-      <div class="modal-body">
-        <div class="mission-tabs">
-          <button class="mission-tab active" data-mission="1">미션 1</button>
-          <button class="mission-tab" data-mission="2">미션 2</button>
-          <button class="mission-tab" data-mission="3">미션 3</button>
+      <div class="quest-body">
+        <div class="quest-intro">
+          <p>고교학점제가 무엇인지 알아보고, 퀴즈를 통해 확인해보세요!</p>
         </div>
 
-        <!-- 미션 1: 나의 꿈 -->
-        <div class="mission-content active" id="mission1">
-          <div class="mission-header">
-            <span class="mission-icon">✨</span>
-            <h3>나의 꿈 탐색하기</h3>
+        <div class="info-box">
+          <h3>💡 고교학점제란?</h3>
+          <ul>
+            <li>학생이 <strong>진로에 따라 원하는 과목</strong>을 선택해서 이수</li>
+            <li>총 <strong>192학점</strong> 이수 시 졸업</li>
+            <li>공통과목(84학점) + 선택과목(90학점) + 창체(18학점)</li>
+            <li>선택과목: 일반선택 → 진로선택 → 융합선택</li>
+          </ul>
+        </div>
+
+        <div class="quiz-section">
+          <h3>🎯 퀴즈</h3>
+          <div class="quiz-item" data-quiz="1-1">
+            <p class="quiz-question">Q1. 고교학점제에서 졸업에 필요한 총 학점은?</p>
+            <div class="quiz-options">
+              <button class="quiz-option" data-answer="wrong">180학점</button>
+              <button class="quiz-option" data-answer="correct">192학점</button>
+              <button class="quiz-option" data-answer="wrong">200학점</button>
+            </div>
+            <div class="quiz-feedback"></div>
           </div>
-          <div class="mission-form">
-            <div class="form-group">
-              <label>어릴 때 되고 싶었던 것 3가지</label>
-              <textarea id="dream-child" placeholder="예: 의사, 선생님, 유튜버..." rows="2"></textarea>
+          <div class="quiz-item" data-quiz="1-2">
+            <p class="quiz-question">Q2. 학생이 직접 선택할 수 있는 선택과목은 몇 학점?</p>
+            <div class="quiz-options">
+              <button class="quiz-option" data-answer="wrong">84학점</button>
+              <button class="quiz-option" data-answer="correct">90학점</button>
+              <button class="quiz-option" data-answer="wrong">100학점</button>
             </div>
-            <div class="form-group">
-              <label>지금 관심 있는 분야나 꿈</label>
-              <textarea id="dream-now" placeholder="현재 마음이 가는 분야를 적어보세요" rows="2"></textarea>
-            </div>
-            <div class="form-group">
-              <label>꿈이 바뀐 이유 (바뀌었다면)</label>
-              <textarea id="dream-why" placeholder="왜 바뀌었는지 생각해보세요" rows="2"></textarea>
-            </div>
+            <div class="quiz-feedback"></div>
           </div>
-        </div>
-
-        <!-- 미션 2: 나의 강점 -->
-        <div class="mission-content" id="mission2">
-          <div class="mission-header">
-            <span class="mission-icon">💪</span>
-            <h3>나의 강점 발견하기</h3>
-          </div>
-          <div class="mission-form">
-            <div class="form-group">
-              <label>칭찬받았던 것들</label>
-              <textarea id="strength-praised" placeholder="어떤 점을 칭찬받았나요?" rows="2"></textarea>
+          <div class="quiz-item" data-quiz="1-3">
+            <p class="quiz-question">Q3. 선택과목의 종류가 아닌 것은?</p>
+            <div class="quiz-options">
+              <button class="quiz-option" data-answer="wrong">일반선택</button>
+              <button class="quiz-option" data-answer="wrong">진로선택</button>
+              <button class="quiz-option" data-answer="correct">필수선택</button>
             </div>
-            <div class="form-group">
-              <label>남들보다 잘한다고 느끼는 것</label>
-              <textarea id="strength-good" placeholder="자신 있는 것을 적어보세요" rows="2"></textarea>
-            </div>
-            <div class="form-group">
-              <label>잘하면서 즐거운 것</label>
-              <textarea id="strength-enjoy" placeholder="잘하고 + 좋아하는 것의 교집합" rows="2"></textarea>
-            </div>
-          </div>
-        </div>
-
-        <!-- 미션 3: 좋아하는 것 -->
-        <div class="mission-content" id="mission3">
-          <div class="mission-header">
-            <span class="mission-icon">❤️</span>
-            <h3>좋아하는 것 정리하기</h3>
-          </div>
-          <div class="mission-form">
-            <div class="form-group">
-              <label>좋아하는 활동 5가지</label>
-              <textarea id="like-activities" placeholder="예: 게임, 독서, 운동, 요리, 그림..." rows="2"></textarea>
-            </div>
-            <div class="form-group">
-              <label>시간 가는 줄 모르고 하는 일</label>
-              <textarea id="like-timeless" placeholder="몇 시간이고 할 수 있는 것은?" rows="2"></textarea>
-            </div>
-            <div class="form-group">
-              <label>나는 어떤 유형일까?</label>
-              <textarea id="like-type" placeholder="사람들과 어울리기 vs 혼자 집중하기 등" rows="2"></textarea>
-            </div>
+            <div class="quiz-feedback"></div>
           </div>
         </div>
       </div>
-
-      <div class="modal-footer">
-        <div class="mission-progress">
-          <span id="mission-done">0</span> / 3 미션 완료
+      <div class="quest-footer">
+        <div class="quest-progress">
+          <span id="quiz-score-1">0</span> / 3 정답
         </div>
-        <button class="save-btn" onclick="saveMission()">💾 저장하기</button>
-        <button class="escape-btn" onclick="tryEscape(1)" disabled id="escape-btn-1">🚪 탈출하기</button>
+        <button class="quest-complete-btn" id="complete-1" onclick="completeQuest(1)" disabled>
+          ✅ 스테이지 클리어
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- 탈출 성공 모달 -->
+  <!-- 퀘스트 2: 나의 계열 탐색 -->
+  <div class="quest-modal" id="quest-2" hidden>
+    <div class="quest-content">
+      <div class="quest-header">
+        <div class="quest-badge">STAGE 2</div>
+        <h2>🔍 나의 계열 탐색</h2>
+        <button class="quest-close" onclick="closeQuest()">&times;</button>
+      </div>
+      <div class="quest-body">
+        <div class="quest-intro">
+          <p>나의 흥미와 적성을 파악하고, 맞는 계열을 찾아보세요!</p>
+        </div>
+
+        <div class="form-section">
+          <div class="form-group">
+            <label>✨ 어릴 때 꿈꿨던 것 3가지</label>
+            <textarea id="input-2-1" placeholder="예: 의사, 선생님, 유튜버..." rows="2"></textarea>
+          </div>
+          <div class="form-group">
+            <label>❤️ 시간 가는 줄 모르고 하는 활동</label>
+            <textarea id="input-2-2" placeholder="예: 게임, 코딩, 그림 그리기, 운동..." rows="2"></textarea>
+          </div>
+          <div class="form-group">
+            <label>💪 남들보다 잘한다고 느끼는 것</label>
+            <textarea id="input-2-3" placeholder="예: 발표, 글쓰기, 계산, 사람들과 어울리기..." rows="2"></textarea>
+          </div>
+        </div>
+
+        <div class="select-section">
+          <h3>🎯 관심 있는 계열 선택 (복수 선택 가능)</h3>
+          <div class="track-options">
+            <label class="track-option">
+              <input type="checkbox" name="track" value="인문">
+              <span class="track-card">
+                <span class="track-icon">📚</span>
+                <span class="track-name">인문</span>
+                <span class="track-desc">문학, 역사, 철학, 언어</span>
+              </span>
+            </label>
+            <label class="track-option">
+              <input type="checkbox" name="track" value="사회">
+              <span class="track-card">
+                <span class="track-icon">🌍</span>
+                <span class="track-name">사회</span>
+                <span class="track-desc">경제, 정치, 법, 심리</span>
+              </span>
+            </label>
+            <label class="track-option">
+              <input type="checkbox" name="track" value="자연">
+              <span class="track-card">
+                <span class="track-icon">🔬</span>
+                <span class="track-name">자연</span>
+                <span class="track-desc">수학, 물리, 화학, 생명</span>
+              </span>
+            </label>
+            <label class="track-option">
+              <input type="checkbox" name="track" value="공학">
+              <span class="track-card">
+                <span class="track-icon">⚙️</span>
+                <span class="track-name">공학</span>
+                <span class="track-desc">기계, 전자, 컴퓨터, AI</span>
+              </span>
+            </label>
+            <label class="track-option">
+              <input type="checkbox" name="track" value="예체능">
+              <span class="track-card">
+                <span class="track-icon">🎨</span>
+                <span class="track-name">예체능</span>
+                <span class="track-desc">미술, 음악, 체육, 디자인</span>
+              </span>
+            </label>
+            <label class="track-option">
+              <input type="checkbox" name="track" value="교육">
+              <span class="track-card">
+                <span class="track-icon">👩‍🏫</span>
+                <span class="track-name">교육</span>
+                <span class="track-desc">교사, 유아교육, 특수교육</span>
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="quest-footer">
+        <button class="save-btn" onclick="saveQuest(2)">💾 저장</button>
+        <button class="quest-complete-btn" id="complete-2" onclick="completeQuest(2)" disabled>
+          ✅ 스테이지 클리어
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 퀘스트 3: 핵심역량 체크 -->
+  <div class="quest-modal" id="quest-3" hidden>
+    <div class="quest-content">
+      <div class="quest-header">
+        <div class="quest-badge">STAGE 3</div>
+        <h2>💪 핵심역량 체크</h2>
+        <button class="quest-close" onclick="closeQuest()">&times;</button>
+      </div>
+      <div class="quest-body">
+        <div class="quest-intro">
+          <p>나의 강점과 역량을 파악해보세요!</p>
+        </div>
+
+        <div class="competency-section">
+          <h3>🎯 각 역량에 대해 나를 평가해보세요</h3>
+
+          <div class="competency-item">
+            <div class="competency-label">
+              <span class="competency-icon">💬</span>
+              <span>의사소통 역량</span>
+            </div>
+            <div class="rating-stars" data-competency="communication">
+              <button class="star" data-value="1">⭐</button>
+              <button class="star" data-value="2">⭐</button>
+              <button class="star" data-value="3">⭐</button>
+              <button class="star" data-value="4">⭐</button>
+              <button class="star" data-value="5">⭐</button>
+            </div>
+          </div>
+
+          <div class="competency-item">
+            <div class="competency-label">
+              <span class="competency-icon">🤝</span>
+              <span>협업 역량</span>
+            </div>
+            <div class="rating-stars" data-competency="collaboration">
+              <button class="star" data-value="1">⭐</button>
+              <button class="star" data-value="2">⭐</button>
+              <button class="star" data-value="3">⭐</button>
+              <button class="star" data-value="4">⭐</button>
+              <button class="star" data-value="5">⭐</button>
+            </div>
+          </div>
+
+          <div class="competency-item">
+            <div class="competency-label">
+              <span class="competency-icon">💡</span>
+              <span>창의적 사고</span>
+            </div>
+            <div class="rating-stars" data-competency="creativity">
+              <button class="star" data-value="1">⭐</button>
+              <button class="star" data-value="2">⭐</button>
+              <button class="star" data-value="3">⭐</button>
+              <button class="star" data-value="4">⭐</button>
+              <button class="star" data-value="5">⭐</button>
+            </div>
+          </div>
+
+          <div class="competency-item">
+            <div class="competency-label">
+              <span class="competency-icon">🔍</span>
+              <span>비판적 사고</span>
+            </div>
+            <div class="rating-stars" data-competency="critical">
+              <button class="star" data-value="1">⭐</button>
+              <button class="star" data-value="2">⭐</button>
+              <button class="star" data-value="3">⭐</button>
+              <button class="star" data-value="4">⭐</button>
+              <button class="star" data-value="5">⭐</button>
+            </div>
+          </div>
+
+          <div class="competency-item">
+            <div class="competency-label">
+              <span class="competency-icon">📊</span>
+              <span>자기관리 역량</span>
+            </div>
+            <div class="rating-stars" data-competency="selfmanagement">
+              <button class="star" data-value="1">⭐</button>
+              <button class="star" data-value="2">⭐</button>
+              <button class="star" data-value="3">⭐</button>
+              <button class="star" data-value="4">⭐</button>
+              <button class="star" data-value="5">⭐</button>
+            </div>
+          </div>
+
+          <div class="competency-item">
+            <div class="competency-label">
+              <span class="competency-icon">🌐</span>
+              <span>지식정보처리 역량</span>
+            </div>
+            <div class="rating-stars" data-competency="knowledge">
+              <button class="star" data-value="1">⭐</button>
+              <button class="star" data-value="2">⭐</button>
+              <button class="star" data-value="3">⭐</button>
+              <button class="star" data-value="4">⭐</button>
+              <button class="star" data-value="5">⭐</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="quest-footer">
+        <button class="save-btn" onclick="saveQuest(3)">💾 저장</button>
+        <button class="quest-complete-btn" id="complete-3" onclick="completeQuest(3)" disabled>
+          ✅ 스테이지 클리어
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 퀘스트 4: 교육과정표 읽기 -->
+  <div class="quest-modal" id="quest-4" hidden>
+    <div class="quest-content">
+      <div class="quest-header">
+        <div class="quest-badge">STAGE 4</div>
+        <h2>📋 교육과정표 읽기</h2>
+        <button class="quest-close" onclick="closeQuest()">&times;</button>
+      </div>
+      <div class="quest-body">
+        <div class="quest-intro">
+          <p>교과 편제표를 이해하고, 과목 구조를 파악해보세요!</p>
+        </div>
+
+        <div class="curriculum-table">
+          <h3>📊 2022 개정 교육과정 편제표</h3>
+          <table class="subject-table">
+            <thead>
+              <tr>
+                <th>교과</th>
+                <th>공통과목</th>
+                <th>일반선택</th>
+                <th>진로선택</th>
+                <th>융합선택</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="subject-name">국어</td>
+                <td>공통국어1,2</td>
+                <td>화법과언어, 독서와작문, 문학</td>
+                <td>주제탐구독서, 문학과영상</td>
+                <td>독서토론과글쓰기</td>
+              </tr>
+              <tr>
+                <td class="subject-name">수학</td>
+                <td>공통수학1,2</td>
+                <td>대수, 미적분I, 확률과통계</td>
+                <td>기하, 미적분II, AI수학</td>
+                <td>수학과문화, 실용통계</td>
+              </tr>
+              <tr>
+                <td class="subject-name">영어</td>
+                <td>공통영어1,2</td>
+                <td>영어I, 영어II, 영어독해와작문</td>
+                <td>심화영어, 직무영어</td>
+                <td>실생활영어, 미디어영어</td>
+              </tr>
+              <tr>
+                <td class="subject-name">사회</td>
+                <td>한국사1,2, 통합사회1,2</td>
+                <td>세계시민과지리, 세계사</td>
+                <td>정치, 경제, 윤리와사상</td>
+                <td>여행지리, 사회문제탐구</td>
+              </tr>
+              <tr>
+                <td class="subject-name">과학</td>
+                <td>통합과학1,2, 과학탐구실험</td>
+                <td>물리학, 화학, 생명과학, 지구과학</td>
+                <td>역학과에너지, 화학반응의세계</td>
+                <td>과학의역사와문화</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="quiz-section">
+          <h3>🎯 확인 퀴즈</h3>
+          <div class="quiz-item" data-quiz="4-1">
+            <p class="quiz-question">Q1. 공통과목과 선택과목의 차이는?</p>
+            <div class="quiz-options">
+              <button class="quiz-option" data-answer="correct">공통과목은 필수, 선택과목은 진로에 맞게 선택</button>
+              <button class="quiz-option" data-answer="wrong">둘 다 필수로 이수해야 함</button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-item" data-quiz="4-2">
+            <p class="quiz-question">Q2. 진로선택 과목은 언제 주로 이수하나요?</p>
+            <div class="quiz-options">
+              <button class="quiz-option" data-answer="wrong">1학년 때</button>
+              <button class="quiz-option" data-answer="correct">2-3학년 때 진로에 맞게</button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+        </div>
+      </div>
+      <div class="quest-footer">
+        <div class="quest-progress">
+          <span id="quiz-score-4">0</span> / 2 정답
+        </div>
+        <button class="quest-complete-btn" id="complete-4" onclick="completeQuest(4)" disabled>
+          ✅ 스테이지 클리어
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 퀘스트 5: 과목 선택하기 -->
+  <div class="quest-modal" id="quest-5" hidden>
+    <div class="quest-content">
+      <div class="quest-header">
+        <div class="quest-badge">STAGE 5</div>
+        <h2>📚 과목 선택하기</h2>
+        <button class="quest-close" onclick="closeQuest()">&times;</button>
+      </div>
+      <div class="quest-body">
+        <div class="quest-intro">
+          <p>선택한 계열에 맞는 과목을 선택해보세요!</p>
+          <p class="selected-track-display">선택한 계열: <strong id="display-track">-</strong></p>
+        </div>
+
+        <div class="subject-selection">
+          <h3>📖 일반선택 과목 (3개 선택)</h3>
+          <div class="subject-grid" id="general-subjects">
+            <label class="subject-chip"><input type="checkbox" name="general" value="화법과언어"> 화법과언어</label>
+            <label class="subject-chip"><input type="checkbox" name="general" value="독서와작문"> 독서와작문</label>
+            <label class="subject-chip"><input type="checkbox" name="general" value="문학"> 문학</label>
+            <label class="subject-chip"><input type="checkbox" name="general" value="대수"> 대수</label>
+            <label class="subject-chip"><input type="checkbox" name="general" value="미적분I"> 미적분I</label>
+            <label class="subject-chip"><input type="checkbox" name="general" value="확률과통계"> 확률과통계</label>
+            <label class="subject-chip"><input type="checkbox" name="general" value="영어I"> 영어I</label>
+            <label class="subject-chip"><input type="checkbox" name="general" value="영어II"> 영어II</label>
+            <label class="subject-chip"><input type="checkbox" name="general" value="물리학"> 물리학</label>
+            <label class="subject-chip"><input type="checkbox" name="general" value="화학"> 화학</label>
+            <label class="subject-chip"><input type="checkbox" name="general" value="생명과학"> 생명과학</label>
+            <label class="subject-chip"><input type="checkbox" name="general" value="지구과학"> 지구과학</label>
+          </div>
+
+          <h3>🎯 진로선택 과목 (3개 선택)</h3>
+          <div class="subject-grid" id="career-subjects">
+            <label class="subject-chip"><input type="checkbox" name="career" value="기하"> 기하</label>
+            <label class="subject-chip"><input type="checkbox" name="career" value="미적분II"> 미적분II</label>
+            <label class="subject-chip"><input type="checkbox" name="career" value="AI수학"> AI수학</label>
+            <label class="subject-chip"><input type="checkbox" name="career" value="심화영어"> 심화영어</label>
+            <label class="subject-chip"><input type="checkbox" name="career" value="역학과에너지"> 역학과에너지</label>
+            <label class="subject-chip"><input type="checkbox" name="career" value="화학반응의세계"> 화학반응의세계</label>
+            <label class="subject-chip"><input type="checkbox" name="career" value="정치"> 정치</label>
+            <label class="subject-chip"><input type="checkbox" name="career" value="경제"> 경제</label>
+            <label class="subject-chip"><input type="checkbox" name="career" value="윤리와사상"> 윤리와사상</label>
+            <label class="subject-chip"><input type="checkbox" name="career" value="프로그래밍"> 프로그래밍</label>
+          </div>
+
+          <h3>⚡ 융합선택 과목 (2개 선택)</h3>
+          <div class="subject-grid" id="fusion-subjects">
+            <label class="subject-chip"><input type="checkbox" name="fusion" value="수학과문화"> 수학과문화</label>
+            <label class="subject-chip"><input type="checkbox" name="fusion" value="실용통계"> 실용통계</label>
+            <label class="subject-chip"><input type="checkbox" name="fusion" value="과학의역사와문화"> 과학의역사와문화</label>
+            <label class="subject-chip"><input type="checkbox" name="fusion" value="여행지리"> 여행지리</label>
+            <label class="subject-chip"><input type="checkbox" name="fusion" value="사회문제탐구"> 사회문제탐구</label>
+            <label class="subject-chip"><input type="checkbox" name="fusion" value="독서토론과글쓰기"> 독서토론과글쓰기</label>
+          </div>
+        </div>
+      </div>
+      <div class="quest-footer">
+        <button class="save-btn" onclick="saveQuest(5)">💾 저장</button>
+        <button class="quest-complete-btn" id="complete-5" onclick="completeQuest(5)" disabled>
+          ✅ 스테이지 클리어
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 퀘스트 6: 학업계획서 작성 -->
+  <div class="quest-modal" id="quest-6" hidden>
+    <div class="quest-content">
+      <div class="quest-header">
+        <div class="quest-badge">STAGE 6</div>
+        <h2>📝 학업계획서 작성</h2>
+        <button class="quest-close" onclick="closeQuest()">&times;</button>
+      </div>
+      <div class="quest-body">
+        <div class="quest-intro">
+          <p>지금까지 탐색한 내용을 바탕으로 3년 학업계획을 작성해보세요!</p>
+        </div>
+
+        <div class="plan-section">
+          <div class="plan-year">
+            <h3>📅 1학년 계획</h3>
+            <textarea id="plan-year1" placeholder="1학년 때 중점적으로 할 것, 탐색할 분야..." rows="3"></textarea>
+          </div>
+          <div class="plan-year">
+            <h3>📅 2학년 계획</h3>
+            <textarea id="plan-year2" placeholder="2학년 때 선택할 과목, 활동 계획..." rows="3"></textarea>
+          </div>
+          <div class="plan-year">
+            <h3>📅 3학년 계획</h3>
+            <textarea id="plan-year3" placeholder="3학년 때 심화할 분야, 진학 준비..." rows="3"></textarea>
+          </div>
+          <div class="plan-goal">
+            <h3>🎯 나의 진로 목표</h3>
+            <textarea id="plan-goal" placeholder="궁극적으로 이루고 싶은 진로 목표..." rows="2"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="quest-footer">
+        <button class="save-btn" onclick="saveQuest(6)">💾 저장</button>
+        <button class="quest-complete-btn" id="complete-6" onclick="completeQuest(6)" disabled>
+          🎉 모든 퀘스트 클리어!
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 성공 모달 -->
   <div class="success-modal" id="success-modal" hidden>
     <div class="success-content">
-      <div class="confetti"></div>
       <div class="success-icon">🎉</div>
-      <h2 id="success-title">ROOM 1 탈출 성공!</h2>
-      <p id="success-message">나를 이해하는 첫 번째 단계를 완료했어요!</p>
-      <div class="success-reward">
-        <span class="reward-badge-small">🏅 자기이해 뱃지 획득!</span>
-      </div>
-      <button class="success-btn" onclick="closeSuccess()">다음 방으로 →</button>
+      <h2>축하해요!</h2>
+      <p id="success-message">스테이지를 클리어했어요!</p>
+      <button class="success-btn" onclick="closeSuccess()">다음 스테이지로 →</button>
     </div>
   </div>
 
-  <footer class="game-footer">
-    <p>© 2026 진로 방탈출 | 고교학점제 진로 설계 프로그램</p>
+  <!-- 최종 결과 모달 -->
+  <div class="result-modal" id="result-modal" hidden>
+    <div class="result-content">
+      <div class="result-header">
+        <h2>🏆 진로 퀘스트 완료!</h2>
+        <p>나만의 진로 로드맵이 완성되었어요</p>
+      </div>
+      <div class="result-body" id="result-body">
+        <!-- 결과 내용이 동적으로 생성됩니다 -->
+      </div>
+      <div class="result-footer">
+        <button class="result-btn" onclick="downloadResult()">📥 결과 저장하기</button>
+        <button class="result-btn secondary" onclick="closeResult()">닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <p>© 2026 진로 퀘스트 | 고교학점제 진로 설계 프로그램</p>
   </footer>
 
   <script src="main.js"></script>
