@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0a0a0f">
+  <meta name="description" content="진로 방탈출 - 3개의 미션을 클리어하고 나만의 진로를 찾아 탈출하세요!">
+  <title>진로 방탈출 🚪 | 고교학점제 진로 설계</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- 인트로 섹션 -->
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <div class="badge">🎓 고교학점제 진로 설계</div>
+      <h1 class="hero-title">
+        <span class="glow">진로 방탈출</span>
+      </h1>
+      <p class="hero-subtitle">
+        3개의 방을 탈출하고<br>
+        나만의 진로를 찾아보세요
+      </p>
+      <div class="scroll-hint">
+        <span>스크롤해서 시작하기</span>
+        <div class="scroll-arrow">↓</div>
+      </div>
+    </div>
+    <div class="hero-bg"></div>
+  </section>
+
+  <!-- 시나리오 섹션 -->
+  <section class="scenario" id="scenario">
+    <div class="scenario-content">
+      <div class="scenario-badge">📋 시나리오</div>
+      <h2 class="scenario-title">고등학교 입학을 앞둔<br>당신에게 미션이 주어졌습니다</h2>
+
+      <div class="story-cards">
+        <div class="story-card" data-aos="fade-up">
+          <div class="story-emoji">😰</div>
+          <p>"과목을 선택하라는데...<br>뭘 골라야 할지 모르겠어"</p>
+        </div>
+        <div class="story-card" data-aos="fade-up" data-delay="200">
+          <div class="story-emoji">🤔</div>
+          <p>"내가 뭘 좋아하는지,<br>뭘 잘하는지도 잘 모르겠고"</p>
+        </div>
+        <div class="story-card" data-aos="fade-up" data-delay="400">
+          <div class="story-emoji">💡</div>
+          <p>"진로 방탈출을 통해<br>나를 찾아가는 여정을 시작하세요!"</p>
+        </div>
+      </div>
+
+      <div class="mission-intro">
+        <p class="mission-text">
+          <strong>3개의 방</strong>을 탈출하면<br>
+          나만의 <strong>맞춤 과목 추천</strong>과<br>
+          <strong>진로 로드맵</strong>을 받을 수 있어요!
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 게임 HUD -->
+  <section class="game-section" id="game">
+    <div class="game-hud">
+      <div class="hud-timer">
+        <span class="timer-icon">⏱️</span>
+        <span class="timer-display" id="timer">30:00</span>
+      </div>
+      <div class="hud-stage">
+        <span class="stage-label">STAGE</span>
+        <span class="stage-value" id="stage">0 / 3</span>
+      </div>
+      <div class="hud-progress">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress" style="width: 0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 방 카드들 -->
+    <div class="rooms-container">
+      <!-- 방 1: 나를 찾는 방 -->
+      <div class="room-card room-1" id="room1" data-room="1">
+        <div class="room-lock" id="lock1">
+          <span class="lock-icon">🔓</span>
+        </div>
+        <div class="room-number">ROOM 1</div>
+        <div class="room-icon">🔍</div>
+        <h3 class="room-title">나를 찾는 방</h3>
+        <p class="room-desc">나의 강점, 흥미, 가치관을 발견해요</p>
+        <div class="room-missions">
+          <div class="mission-item">✨ 나의 꿈 탐색하기</div>
+          <div class="mission-item">💪 강점 발견하기</div>
+          <div class="mission-item">❤️ 좋아하는 것 정리하기</div>
+        </div>
+        <button class="room-btn" onclick="enterRoom(1)">입장하기</button>
+      </div>
+
+      <!-- 방 2: 직업을 탐험하는 방 -->
+      <div class="room-card room-2 locked" id="room2" data-room="2">
+        <div class="room-lock" id="lock2">
+          <span class="lock-icon">🔒</span>
+        </div>
+        <div class="room-number">ROOM 2</div>
+        <div class="room-icon">🗺️</div>
+        <h3 class="room-title">직업 탐험의 방</h3>
+        <p class="room-desc">다양한 직업 세계를 탐험해요</p>
+        <div class="room-missions">
+          <div class="mission-item">🔬 과학기술 분야</div>
+          <div class="mission-item">🎨 예술문화 분야</div>
+          <div class="mission-item">💼 비즈니스 분야</div>
+        </div>
+        <button class="room-btn" disabled>🔒 ROOM 1 클리어 필요</button>
+      </div>
+
+      <!-- 방 3: 과목을 선택하는 방 -->
+      <div class="room-card room-3 locked" id="room3" data-room="3">
+        <div class="room-lock" id="lock3">
+          <span class="lock-icon">🔒</span>
+        </div>
+        <div class="room-number">ROOM 3</div>
+        <div class="room-icon">📚</div>
+        <h3 class="room-title">과목 선택의 방</h3>
+        <p class="room-desc">고교학점제 과목을 선택해요</p>
+        <div class="room-missions">
+          <div class="mission-item">📖 공통과목 이해하기</div>
+          <div class="mission-item">🎯 선택과목 고르기</div>
+          <div class="mission-item">⚡ 3년 로드맵 완성</div>
+        </div>
+        <button class="room-btn" disabled>🔒 ROOM 2 클리어 필요</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 고교학점제 설명 섹션 -->
+  <section class="info-section" id="info">
+    <div class="info-content">
+      <div class="info-badge">📘 고교학점제란?</div>
+      <h2 class="info-title">내가 원하는 과목을<br>직접 선택하는 제도</h2>
+
+      <div class="info-cards">
+        <div class="info-card">
+          <div class="info-icon">🎯</div>
+          <h4>선택의 자유</h4>
+          <p>진로에 맞는 과목을 직접 선택</p>
+        </div>
+        <div class="info-card">
+          <div class="info-icon">📊</div>
+          <h4>학점 이수</h4>
+          <p>192학점 이상 이수하면 졸업</p>
+        </div>
+        <div class="info-card">
+          <div class="info-icon">🏫</div>
+          <h4>다양한 수업</h4>
+          <p>다른 학교, 온라인에서도 수강 가능</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 보상 섹션 -->
+  <section class="reward-section" id="reward">
+    <div class="reward-content">
+      <div class="reward-badge">🎁 탈출 보상</div>
+      <h2 class="reward-title">모든 방을 클리어하면</h2>
+
+      <div class="reward-cards">
+        <div class="reward-card gold">
+          <div class="reward-icon">📋</div>
+          <h4>맞춤 과목 추천서</h4>
+          <p>나의 진로에 맞는 과목 리스트</p>
+        </div>
+        <div class="reward-card silver">
+          <div class="reward-icon">🗓️</div>
+          <h4>3년 로드맵</h4>
+          <p>학년별 과목 선택 가이드</p>
+        </div>
+        <div class="reward-card bronze">
+          <div class="reward-icon">🏆</div>
+          <h4>진로 탐색 인증서</h4>
+          <p>탈출 성공 기념 인증서</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 시작 버튼 -->
+  <section class="cta-section">
+    <button class="cta-btn" onclick="startGame()">
+      <span class="cta-icon">🚀</span>
+      <span class="cta-text">지금 시작하기</span>
+    </button>
+    <p class="cta-note">약 30분 소요 · 언제든 저장 가능</p>
+  </section>
+
+  <!-- 방 1 모달 -->
+  <div class="room-modal" id="room1-modal" hidden>
+    <div class="modal-content room-modal-content">
+      <div class="modal-header">
+        <div class="modal-room-info">
+          <span class="modal-room-number">ROOM 1</span>
+          <h2>나를 찾는 방</h2>
+        </div>
+        <button class="modal-close" onclick="closeRoom()">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="mission-tabs">
+          <button class="mission-tab active" data-mission="1">미션 1</button>
+          <button class="mission-tab" data-mission="2">미션 2</button>
+          <button class="mission-tab" data-mission="3">미션 3</button>
+        </div>
+
+        <!-- 미션 1: 나의 꿈 -->
+        <div class="mission-content active" id="mission1">
+          <div class="mission-header">
+            <span class="mission-icon">✨</span>
+            <h3>나의 꿈 탐색하기</h3>
+          </div>
+          <div class="mission-form">
+            <div class="form-group">
+              <label>어릴 때 되고 싶었던 것 3가지</label>
+              <textarea id="dream-child" placeholder="예: 의사, 선생님, 유튜버..." rows="2"></textarea>
+            </div>
+            <div class="form-group">
+              <label>지금 관심 있는 분야나 꿈</label>
+              <textarea id="dream-now" placeholder="현재 마음이 가는 분야를 적어보세요" rows="2"></textarea>
+            </div>
+            <div class="form-group">
+              <label>꿈이 바뀐 이유 (바뀌었다면)</label>
+              <textarea id="dream-why" placeholder="왜 바뀌었는지 생각해보세요" rows="2"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- 미션 2: 나의 강점 -->
+        <div class="mission-content" id="mission2">
+          <div class="mission-header">
+            <span class="mission-icon">💪</span>
+            <h3>나의 강점 발견하기</h3>
+          </div>
+          <div class="mission-form">
+            <div class="form-group">
+              <label>칭찬받았던 것들</label>
+              <textarea id="strength-praised" placeholder="어떤 점을 칭찬받았나요?" rows="2"></textarea>
+            </div>
+            <div class="form-group">
+              <label>남들보다 잘한다고 느끼는 것</label>
+              <textarea id="strength-good" placeholder="자신 있는 것을 적어보세요" rows="2"></textarea>
+            </div>
+            <div class="form-group">
+              <label>잘하면서 즐거운 것</label>
+              <textarea id="strength-enjoy" placeholder="잘하고 + 좋아하는 것의 교집합" rows="2"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- 미션 3: 좋아하는 것 -->
+        <div class="mission-content" id="mission3">
+          <div class="mission-header">
+            <span class="mission-icon">❤️</span>
+            <h3>좋아하는 것 정리하기</h3>
+          </div>
+          <div class="mission-form">
+            <div class="form-group">
+              <label>좋아하는 활동 5가지</label>
+              <textarea id="like-activities" placeholder="예: 게임, 독서, 운동, 요리, 그림..." rows="2"></textarea>
+            </div>
+            <div class="form-group">
+              <label>시간 가는 줄 모르고 하는 일</label>
+              <textarea id="like-timeless" placeholder="몇 시간이고 할 수 있는 것은?" rows="2"></textarea>
+            </div>
+            <div class="form-group">
+              <label>나는 어떤 유형일까?</label>
+              <textarea id="like-type" placeholder="사람들과 어울리기 vs 혼자 집중하기 등" rows="2"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <div class="mission-progress">
+          <span id="mission-done">0</span> / 3 미션 완료
+        </div>
+        <button class="save-btn" onclick="saveMission()">💾 저장하기</button>
+        <button class="escape-btn" onclick="tryEscape(1)" disabled id="escape-btn-1">🚪 탈출하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 탈출 성공 모달 -->
+  <div class="success-modal" id="success-modal" hidden>
+    <div class="success-content">
+      <div class="confetti"></div>
+      <div class="success-icon">🎉</div>
+      <h2 id="success-title">ROOM 1 탈출 성공!</h2>
+      <p id="success-message">나를 이해하는 첫 번째 단계를 완료했어요!</p>
+      <div class="success-reward">
+        <span class="reward-badge-small">🏅 자기이해 뱃지 획득!</span>
+      </div>
+      <button class="success-btn" onclick="closeSuccess()">다음 방으로 →</button>
+    </div>
+  </div>
+
+  <footer class="game-footer">
+    <p>© 2026 진로 방탈출 | 고교학점제 진로 설계 프로그램</p>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
