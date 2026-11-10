@@ -234,6 +234,7 @@ function setupQuizHandlers() {
         quizItem.querySelector('.quiz-feedback').textContent = '✅ 정답!';
         quizItem.querySelector('.quiz-feedback').style.color = '#16a34a';
         gameState.stageData[stageNum].quizScores[quizId] = true;
+        playSFX('correct');
         // 정답 맞추면 다른 옵션 비활성화
         quizItem.querySelectorAll('.quiz-option').forEach(opt => {
           opt.disabled = true;
@@ -242,6 +243,7 @@ function setupQuizHandlers() {
         this.classList.add('wrong');
         quizItem.querySelector('.quiz-feedback').textContent = '❌ 다시 시도해보세요!';
         quizItem.querySelector('.quiz-feedback').style.color = '#dc2626';
+        playSFX('wrong');
         // 틀리면 이 버튼만 잠시 비활성화
         this.disabled = true;
         setTimeout(() => {
@@ -456,6 +458,7 @@ function completeQuest(stageNum) {
   updateProgress();
   updateStageStates();
   moveCharacter(true); // 애니메이션과 함께 이동
+  playSFX('complete');
 
   // 성공 모달
   const successModal = document.getElementById('success-modal');
@@ -704,6 +707,15 @@ window.resetGame = resetGame;
 
 // BGM 관련
 let bgmPlaying = false;
+
+function playSFX(type) {
+  const sfx = document.getElementById(`sfx-${type}`);
+  if (sfx) {
+    sfx.currentTime = 0;
+    sfx.volume = 0.5;
+    sfx.play().catch(() => {});
+  }
+}
 
 function toggleBGM() {
   const bgm = document.getElementById('bgm');
