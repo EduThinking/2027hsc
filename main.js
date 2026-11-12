@@ -5,6 +5,7 @@ const STORAGE_KEY = 'career_quest_v3';
 // 게임 상태
 let gameState = {
   nickname: '',
+  character: '🧙',
   currentStage: 1,
   completedStages: [],
   stageData: {
@@ -64,6 +65,7 @@ function updateUI() {
   updateProgress();
   updateStageStates();
   moveCharacter();
+  updateCharacterDisplay();
 }
 
 // 진행률 업데이트
@@ -763,6 +765,11 @@ function showAdventureInfo() {
       input.value = gameState.nickname;
       updateStartButton();
     }
+    // 기존 캐릭터 선택 복원
+    if (gameState.character) {
+      const charRadio = document.querySelector(`input[name="character"][value="${gameState.character}"]`);
+      if (charRadio) charRadio.checked = true;
+    }
   }
 }
 window.showAdventureInfo = showAdventureInfo;
@@ -804,15 +811,20 @@ function updateStartButton() {
 function startAdventure() {
   const input = document.getElementById('nickname-input');
   const nickname = input?.value.trim();
+  const selectedChar = document.querySelector('input[name="character"]:checked')?.value || '🧙';
 
   if (!nickname) {
     showToast('🧙 모험가 이름을 입력해주세요!');
     return;
   }
 
-  // 닉네임 저장
+  // 닉네임과 캐릭터 저장
   gameState.nickname = nickname;
+  gameState.character = selectedChar;
   saveState();
+
+  // 맵에서 캐릭터 업데이트
+  updateCharacterDisplay();
 
   // 모달 닫기
   closeAdventureInfo();
@@ -853,10 +865,19 @@ function showWelcomeMessage() {
 
   // 닉네임이 있으면 환영 메시지 표시
   if (gameState.nickname && mapSection) {
+    const char = gameState.character || '🧙';
     const welcome = document.createElement('div');
     welcome.className = 'welcome-message';
-    welcome.textContent = `🧙 ${gameState.nickname} 모험가, 환영해요!`;
+    welcome.textContent = `${char} ${gameState.nickname} 모험가, 환영해요!`;
     mapSection.prepend(welcome);
+  }
+}
+
+// 캐릭터 표시 업데이트
+function updateCharacterDisplay() {
+  const character = document.getElementById('character');
+  if (character && gameState.character) {
+    character.querySelector('span').textContent = gameState.character;
   }
 }
 

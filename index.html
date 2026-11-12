@@ -70,8 +70,53 @@
           <h3>🏆 모험을 완료하면?</h3>
           <p>나만의 <strong>진로 로드맵</strong>이 완성돼요! 3년간의 학업계획과 선택한 과목이 정리된 결과물을 저장할 수 있어요.</p>
         </div>
+        <div class="adventure-character">
+          <h3>🎭 캐릭터를 선택하세요!</h3>
+          <div class="character-options">
+            <label class="character-option">
+              <input type="radio" name="character" value="🧙" checked>
+              <span class="character-card">🧙</span>
+              <span class="character-name">마법사</span>
+            </label>
+            <label class="character-option">
+              <input type="radio" name="character" value="🧚">
+              <span class="character-card">🧚</span>
+              <span class="character-name">요정</span>
+            </label>
+            <label class="character-option">
+              <input type="radio" name="character" value="🦸">
+              <span class="character-card">🦸</span>
+              <span class="character-name">히어로</span>
+            </label>
+            <label class="character-option">
+              <input type="radio" name="character" value="🐱">
+              <span class="character-card">🐱</span>
+              <span class="character-name">고양이</span>
+            </label>
+            <label class="character-option">
+              <input type="radio" name="character" value="🐰">
+              <span class="character-card">🐰</span>
+              <span class="character-name">토끼</span>
+            </label>
+            <label class="character-option">
+              <input type="radio" name="character" value="🦊">
+              <span class="character-card">🦊</span>
+              <span class="character-name">여우</span>
+            </label>
+            <label class="character-option">
+              <input type="radio" name="character" value="🐻">
+              <span class="character-card">🐻</span>
+              <span class="character-name">곰</span>
+            </label>
+            <label class="character-option">
+              <input type="radio" name="character" value="🦁">
+              <span class="character-card">🦁</span>
+              <span class="character-name">사자</span>
+            </label>
+          </div>
+        </div>
         <div class="adventure-nickname">
-          <h3>🧙 모험가 이름을 정해주세요!</h3>
+          <h3>✏️ 모험가 이름을 정해주세요!</h3>
           <input type="text" id="nickname-input" placeholder="예: 용감한사자, 빛나는별..." maxlength="10">
           <p class="nickname-hint">한글/영문 10자 이내</p>
         </div>
@@ -106,12 +151,36 @@
       <svg class="path-line" viewBox="0 0 1000 600" preserveAspectRatio="none">
         <defs>
           <linearGradient id="magicGradient" x1="0%" y1="100%" x2="100%" y2="0%">
-            <stop offset="0%" style="stop-color:#f472b6;stop-opacity:0.8" />
-            <stop offset="50%" style="stop-color:#a78bfa;stop-opacity:0.8" />
-            <stop offset="100%" style="stop-color:#60a5fa;stop-opacity:0.8" />
+            <stop offset="0%" style="stop-color:#f472b6;stop-opacity:0.9" />
+            <stop offset="50%" style="stop-color:#a78bfa;stop-opacity:0.9" />
+            <stop offset="100%" style="stop-color:#60a5fa;stop-opacity:0.9" />
           </linearGradient>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
         </defs>
-        <path class="quest-path" d="M 80,520 C 150,480 200,420 280,400 S 380,340 450,320 S 550,260 620,240 S 720,180 780,160 S 880,100 920,60" />
+        <!-- 배경 두꺼운 선 -->
+        <path class="quest-path-bg" d="M 80,520 Q 180,500 280,420 T 450,340 T 620,260 T 780,180 T 920,80" />
+        <!-- 메인 그라데이션 선 -->
+        <path class="quest-path" d="M 80,520 Q 180,500 280,420 T 450,340 T 620,260 T 780,180 T 920,80" filter="url(#glow)" />
+        <!-- 움직이는 점선 -->
+        <path class="quest-path-dots" d="M 80,520 Q 180,500 280,420 T 450,340 T 620,260 T 780,180 T 920,80" />
+        <!-- 스테이지 연결점 -->
+        <circle cx="80" cy="520" r="8" fill="#ffd700" filter="url(#glow)" />
+        <circle cx="180" cy="460" r="6" fill="#a78bfa" />
+        <circle cx="280" cy="420" r="6" fill="#a78bfa" />
+        <circle cx="365" cy="380" r="6" fill="#a78bfa" />
+        <circle cx="450" cy="340" r="6" fill="#a78bfa" />
+        <circle cx="535" cy="300" r="6" fill="#a78bfa" />
+        <circle cx="620" cy="260" r="6" fill="#a78bfa" />
+        <circle cx="700" cy="220" r="6" fill="#a78bfa" />
+        <circle cx="780" cy="180" r="6" fill="#a78bfa" />
+        <circle cx="850" cy="130" r="6" fill="#a78bfa" />
+        <circle cx="920" cy="80" r="8" fill="#ffd700" filter="url(#glow)" />
       </svg>
 
       <!-- 스테이지들 -->

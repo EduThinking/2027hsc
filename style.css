@@ -1659,3 +1659,127 @@ body {
     width: 100%;
   }
 }
+
+/* 캐릭터 선택 */
+.adventure-character {
+  margin-bottom: 1.5rem;
+}
+
+.character-options {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.character-option {
+  cursor: pointer;
+}
+
+.character-option input {
+  display: none;
+}
+
+.character-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: 1;
+  font-size: 2.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  transition: all 0.3s ease;
+}
+
+.character-option input:checked + .character-card {
+  border-color: var(--accent-gold);
+  background: rgba(255, 215, 0, 0.1);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+  transform: scale(1.05);
+}
+
+.character-option:hover .character-card {
+  border-color: var(--accent-purple);
+  background: rgba(168, 85, 247, 0.1);
+}
+
+.character-name {
+  display: block;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+.character-option input:checked ~ .character-name {
+  color: var(--accent-gold);
+  font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  .character-options {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+  }
+
+  .character-card {
+    font-size: 1.8rem;
+  }
+
+  .character-name {
+    font-size: 0.65rem;
+  }
+}
+
+/* 맵 연결선 개선 */
+.quest-path {
+  stroke-width: 8;
+  stroke-dasharray: none;
+  opacity: 0.8;
+}
+
+.quest-path-bg {
+  fill: none;
+  stroke: rgba(168, 85, 247, 0.2);
+  stroke-width: 20;
+  stroke-linecap: round;
+}
+
+.quest-path-dots {
+  fill: none;
+  stroke: var(--accent-gold);
+  stroke-width: 4;
+  stroke-dasharray: 2 12;
+  stroke-linecap: round;
+  animation: path-march 2s linear infinite;
+}
+
+@keyframes path-march {
+  0% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: -28; }
+}
+
+/* 스테이지 연결 점 */
+.stage::before {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  width: 12px;
+  height: 12px;
+  background: var(--accent-purple);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--accent-purple);
+  z-index: 5;
+}
+
+.stage.completed::before {
+  background: var(--accent-green);
+  box-shadow: 0 0 10px var(--accent-green);
+}
+
+.stage-start::before,
+.stage-goal::before {
+  display: none;
+}
