@@ -287,37 +287,47 @@ body {
   text-align: right;
 }
 
-/* 맵 컨테이너 */
+/* 맵 컨테이너 - 우주 테마 */
 .map-container {
   position: relative;
   max-width: 1000px;
   height: 650px;
   margin: 0 auto;
   background:
-    radial-gradient(ellipse at center, rgba(26, 26, 53, 0.9) 0%, rgba(15, 15, 35, 0.95) 100%);
-  border: 2px solid rgba(168, 85, 247, 0.3);
+    radial-gradient(ellipse at 20% 80%, rgba(88, 28, 135, 0.3) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(30, 64, 175, 0.3) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(15, 15, 35, 1) 0%, rgba(5, 5, 15, 1) 100%);
+  border: 2px solid rgba(96, 165, 250, 0.3);
   border-radius: 30px;
-  box-shadow: var(--shadow-lg), inset 0 0 100px rgba(168, 85, 247, 0.05);
+  box-shadow: var(--shadow-lg), inset 0 0 150px rgba(30, 64, 175, 0.1);
   overflow: hidden;
 }
 
-/* 마법 파티클 */
+/* 우주 별 배경 */
 .magic-particles {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(2px 2px at 20% 30%, var(--accent-purple) 1px, transparent 0),
-    radial-gradient(2px 2px at 80% 70%, var(--accent-blue) 1px, transparent 0),
-    radial-gradient(2px 2px at 40% 80%, var(--accent-pink) 1px, transparent 0),
-    radial-gradient(2px 2px at 60% 20%, var(--accent-gold) 1px, transparent 0);
-  background-size: 250px 250px;
-  animation: float-particles 20s linear infinite;
-  opacity: 0.4;
+    radial-gradient(1px 1px at 10% 15%, white 1px, transparent 0),
+    radial-gradient(1.5px 1.5px at 25% 35%, rgba(255,255,255,0.8) 1px, transparent 0),
+    radial-gradient(1px 1px at 40% 10%, white 1px, transparent 0),
+    radial-gradient(2px 2px at 55% 45%, rgba(96, 165, 250, 0.9) 1px, transparent 0),
+    radial-gradient(1px 1px at 70% 25%, white 1px, transparent 0),
+    radial-gradient(1.5px 1.5px at 85% 55%, rgba(244, 114, 182, 0.8) 1px, transparent 0),
+    radial-gradient(1px 1px at 15% 70%, white 1px, transparent 0),
+    radial-gradient(1px 1px at 30% 85%, white 1px, transparent 0),
+    radial-gradient(2px 2px at 60% 75%, rgba(168, 139, 250, 0.9) 1px, transparent 0),
+    radial-gradient(1px 1px at 90% 80%, white 1px, transparent 0),
+    radial-gradient(1px 1px at 5% 50%, white 1px, transparent 0),
+    radial-gradient(1.5px 1.5px at 95% 40%, white 1px, transparent 0);
+  background-size: 100% 100%;
+  animation: twinkle-stars 4s ease-in-out infinite;
+  opacity: 0.8;
 }
 
-@keyframes float-particles {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-250px); }
+@keyframes twinkle-stars {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 0.5; }
 }
 
 /* 경로 라인 */
@@ -408,33 +418,60 @@ body {
   z-index: 1;
 }
 
+/* 행성 스타일 스테이지 */
 .stage-icon {
-  width: 75px;
-  height: 75px;
-  background: linear-gradient(135deg, var(--bg-card) 0%, rgba(26, 26, 53, 0.9) 100%);
-  border: 2px solid var(--accent-purple);
-  border-radius: 20px;
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.2) 0%, transparent 50%),
+              linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-blue) 100%);
+  border: 3px solid rgba(255,255,255,0.3);
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 2rem;
-  box-shadow: var(--shadow), 0 0 20px rgba(168, 85, 247, 0.2);
+  box-shadow:
+    0 0 30px rgba(168, 85, 247, 0.4),
+    inset 0 0 20px rgba(0,0,0,0.3),
+    0 4px 15px rgba(0,0,0,0.5);
   transition: all 0.3s ease;
+  position: relative;
+}
+
+/* 행성 고리 효과 */
+.stage-icon::after {
+  content: '';
+  position: absolute;
+  width: 110%;
+  height: 30%;
+  border: 2px solid rgba(255,255,255,0.2);
+  border-radius: 50%;
+  transform: rotateX(70deg);
+  pointer-events: none;
 }
 
 .stage:not(.locked) .stage-icon {
-  border-color: var(--accent-purple);
+  border-color: rgba(255,255,255,0.4);
 }
 
 .stage.locked .stage-icon {
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.1) 0%, transparent 50%),
+              linear-gradient(135deg, #3a3a5a 0%, #2a2a4a 100%);
   border-color: rgba(255,255,255,0.1);
   opacity: 0.5;
-  filter: grayscale(0.5);
+  filter: grayscale(0.3);
+  box-shadow: 0 0 10px rgba(100, 100, 150, 0.2);
+}
+
+.stage.locked .stage-icon::after {
+  opacity: 0.3;
 }
 
 .stage.completed .stage-icon {
-  border-color: var(--accent-green);
-  box-shadow: 0 0 25px rgba(74, 222, 128, 0.4);
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.3) 0%, transparent 50%),
+              linear-gradient(135deg, var(--accent-green) 0%, #22c55e 100%);
+  border-color: rgba(74, 222, 128, 0.6);
+  box-shadow: 0 0 40px rgba(74, 222, 128, 0.5);
 }
 
 .stage-title {
@@ -511,7 +548,7 @@ body {
 .stage-6 { left: 83%; bottom: 18%; }
 .stage-goal { right: 5%; top: 5%; }
 
-/* 캐릭터 (마법사) */
+/* 캐릭터 (우주선) */
 .character {
   position: absolute;
   left: 5%;
@@ -521,42 +558,52 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2.8rem;
+  font-size: 2.5rem;
   z-index: 20;
   transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-  filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.6));
-  animation: float-character 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 20px rgba(96, 165, 250, 0.8));
 }
 
-@keyframes float-character {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+/* 우주선 추진 불꽃 효과 */
+.character::after {
+  content: '🔥';
+  position: absolute;
+  bottom: -15px;
+  font-size: 1rem;
+  opacity: 0.8;
+  animation: thrust 0.3s ease-in-out infinite;
+  filter: hue-rotate(200deg);
+}
+
+@keyframes thrust {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.2); opacity: 1; }
 }
 
 .character.moving {
-  animation: teleport 0.8s ease;
+  animation: warp-drive 0.8s ease;
 }
 
-@keyframes teleport {
-  0% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.6)); }
-  25% { transform: scale(1.3) rotate(10deg); filter: drop-shadow(0 0 30px rgba(168, 85, 247, 1)); }
-  50% { transform: scale(0.5) rotate(-10deg); filter: drop-shadow(0 0 50px rgba(255, 215, 0, 1)); }
-  75% { transform: scale(1.2) rotate(5deg); filter: drop-shadow(0 0 30px rgba(168, 85, 247, 1)); }
-  100% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.6)); }
+@keyframes warp-drive {
+  0% { transform: scale(1); filter: drop-shadow(0 0 20px rgba(96, 165, 250, 0.8)); }
+  25% { transform: scale(0.8) rotate(15deg); filter: drop-shadow(0 0 40px rgba(96, 165, 250, 1)); }
+  50% { transform: scale(0.3) translateX(50px); filter: drop-shadow(0 0 60px rgba(255, 255, 255, 1)); }
+  75% { transform: scale(0.8) rotate(-15deg); filter: drop-shadow(0 0 40px rgba(96, 165, 250, 1)); }
+  100% { transform: scale(1); filter: drop-shadow(0 0 20px rgba(96, 165, 250, 0.8)); }
 }
 
-/* 마법학교 장식 요소 */
+/* 우주 장식 요소 */
 .deco {
   position: absolute;
   pointer-events: none;
   opacity: 0.7;
-  animation: float-deco 4s ease-in-out infinite;
+  animation: float-deco 6s ease-in-out infinite;
 }
 
-.deco-castle { right: 10%; top: 35%; font-size: 3rem; animation-delay: 0s; }
-.deco-tower { left: 8%; top: 25%; font-size: 2rem; animation-delay: 0.5s; }
-.deco-moon { right: 15%; top: 8%; font-size: 2.5rem; opacity: 0.9; animation-delay: 1s; }
-.deco-star1 { left: 20%; top: 15%; font-size: 1.5rem; animation-delay: 1.5s; }
+.deco-castle { right: 8%; top: 40%; font-size: 2.5rem; animation-delay: 0s; }
+.deco-tower { left: 5%; top: 20%; font-size: 1.5rem; animation-delay: 0.5s; }
+.deco-moon { left: 45%; top: 5%; font-size: 2rem; opacity: 0.9; animation-delay: 1s; }
+.deco-star1 { left: 20%; top: 12%; font-size: 1.2rem; animation-delay: 1.5s; }
 .deco-star2 { right: 30%; top: 20%; font-size: 1.2rem; animation-delay: 2s; }
 .deco-owl { left: 30%; bottom: 20%; font-size: 1.8rem; animation-delay: 0.8s; }
 .deco-cat { right: 40%; bottom: 15%; font-size: 1.5rem; animation-delay: 1.2s; }

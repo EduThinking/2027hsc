@@ -5,7 +5,7 @@ const STORAGE_KEY = 'career_quest_v3';
 // 게임 상태
 let gameState = {
   nickname: '',
-  character: '🧙',
+  character: '🚀',
   currentStage: 1,
   completedStages: [],
   stageData: {
@@ -814,7 +814,7 @@ function startAdventure() {
   const selectedChar = document.querySelector('input[name="character"]:checked')?.value || '🧙';
 
   if (!nickname) {
-    showToast('🧙 모험가 이름을 입력해주세요!');
+    showToast('🚀 탐험가 이름을 입력해주세요!');
     return;
   }
 
@@ -868,7 +868,7 @@ function showWelcomeMessage() {
     const char = gameState.character || '🧙';
     const welcome = document.createElement('div');
     welcome.className = 'welcome-message';
-    welcome.textContent = `${char} ${gameState.nickname} 모험가, 환영해요!`;
+    welcome.textContent = `${char} ${gameState.nickname} 탐험가, 환영해요!`;
     mapSection.prepend(welcome);
   }
 }
