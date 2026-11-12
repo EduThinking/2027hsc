@@ -35,12 +35,55 @@
       <div class="intro-badge">🏰 진로 마법학교</div>
       <h1 class="intro-title">CAREER QUEST</h1>
       <p class="intro-subtitle">6개의 마법 퀘스트를 클리어하고<br>나만의 진로 로드맵을 완성하세요!</p>
-      <button class="start-btn" onclick="startGame()">
+      <button class="start-btn" onclick="showAdventureInfo()">
         <span>🪄 모험 시작하기</span>
       </button>
       <button class="reset-btn" onclick="resetGame()">🔄 처음부터 다시하기</button>
     </div>
   </section>
+
+  <!-- 모험 소개 모달 -->
+  <div class="adventure-modal" id="adventure-modal" hidden>
+    <div class="adventure-content">
+      <div class="adventure-header">
+        <div class="adventure-icon">🏰</div>
+        <h2>진로 마법학교에 오신 것을 환영합니다!</h2>
+      </div>
+      <div class="adventure-body">
+        <div class="adventure-info">
+          <h3>🎯 이 모험은?</h3>
+          <p><strong>고교학점제</strong>를 이해하고, <strong>나만의 진로 로드맵</strong>을 만드는 여정이에요.</p>
+          <p>6개의 마법 퀘스트를 하나씩 클리어하면서 나의 관심사, 강점, 희망 진로를 탐색하게 됩니다.</p>
+        </div>
+        <div class="adventure-stages">
+          <h3>📜 퀘스트 여정</h3>
+          <ul>
+            <li><span class="stage-num">I</span> 고교학점제 이해하기</li>
+            <li><span class="stage-num">II</span> 나의 계열 탐색</li>
+            <li><span class="stage-num">III</span> 핵심역량 체크</li>
+            <li><span class="stage-num">IV</span> 교육과정표 읽기</li>
+            <li><span class="stage-num">V</span> 과목 선택하기</li>
+            <li><span class="stage-num">VI</span> 학업계획서 작성</li>
+          </ul>
+        </div>
+        <div class="adventure-reward">
+          <h3>🏆 모험을 완료하면?</h3>
+          <p>나만의 <strong>진로 로드맵</strong>이 완성돼요! 3년간의 학업계획과 선택한 과목이 정리된 결과물을 저장할 수 있어요.</p>
+        </div>
+        <div class="adventure-nickname">
+          <h3>🧙 모험가 이름을 정해주세요!</h3>
+          <input type="text" id="nickname-input" placeholder="예: 용감한사자, 빛나는별..." maxlength="10">
+          <p class="nickname-hint">한글/영문 10자 이내</p>
+        </div>
+      </div>
+      <div class="adventure-footer">
+        <button class="adventure-back-btn" onclick="closeAdventureInfo()">← 돌아가기</button>
+        <button class="adventure-start-btn" id="adventure-start-btn" onclick="startAdventure()" disabled>
+          🚀 모험 시작!
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- 게임 맵 -->
   <section class="map-section" id="map">

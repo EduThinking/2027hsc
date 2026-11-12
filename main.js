@@ -4,6 +4,7 @@ const STORAGE_KEY = 'career_quest_v3';
 
 // 게임 상태
 let gameState = {
+  nickname: '',
   currentStage: 1,
   completedStages: [],
   stageData: {
@@ -36,6 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
   setupRatingHandlers();
   setupSubjectHandlers();
   setupFormHandlers();
+  setupNicknameHandler();
+  showWelcomeMessage();
   console.log('🎓 진로 퀘스트 v2 로드 완료!');
 });
 
@@ -497,6 +500,13 @@ window.closeSuccess = closeSuccess;
 function showFinalResult() {
   const resultBody = document.getElementById('result-body');
   const data = gameState.stageData;
+  const nickname = gameState.nickname || '모험가';
+
+  // 결과 헤더에 닉네임 표시
+  const resultHeader = document.querySelector('.result-header h2');
+  if (resultHeader) {
+    resultHeader.textContent = `🏆 ${nickname} 모험가, 퀘스트 완료!`;
+  }
 
   let html = `
     <div class="result-section">
@@ -579,9 +589,11 @@ window.closeResult = closeResult;
 function downloadResult() {
   const data = gameState.stageData;
 
+  const nickname = gameState.nickname || '모험가';
+
   let text = `
 ══════════════════════════════════════
-     🎓 나의 진로 로드맵
+     🎓 ${nickname}의 진로 로드맵
 ══════════════════════════════════════
 
 📝 작성일: ${new Date().toLocaleDateString('ko-KR')}
@@ -739,10 +751,79 @@ function toggleBGM() {
 }
 window.toggleBGM = toggleBGM;
 
-// 게임 시작 (인트로에서 맵으로)
-function startGame() {
+// 모험 소개 모달 열기
+function showAdventureInfo() {
+  const modal = document.getElementById('adventure-modal');
+  const input = document.getElementById('nickname-input');
+
+  if (modal) {
+    modal.hidden = false;
+    // 기존 닉네임 있으면 표시
+    if (gameState.nickname) {
+      input.value = gameState.nickname;
+      updateStartButton();
+    }
+  }
+}
+window.showAdventureInfo = showAdventureInfo;
+
+// 모험 소개 모달 닫기
+function closeAdventureInfo() {
+  const modal = document.getElementById('adventure-modal');
+  if (modal) {
+    modal.hidden = true;
+  }
+}
+window.closeAdventureInfo = closeAdventureInfo;
+
+// 닉네임 입력 핸들러
+function setupNicknameHandler() {
+  const input = document.getElementById('nickname-input');
+  if (input) {
+    input.addEventListener('input', updateStartButton);
+    input.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter' && input.value.trim()) {
+        startAdventure();
+      }
+    });
+  }
+}
+
+// 시작 버튼 상태 업데이트
+function updateStartButton() {
+  const input = document.getElementById('nickname-input');
+  const btn = document.getElementById('adventure-start-btn');
+
+  if (input && btn) {
+    const hasNickname = input.value.trim().length > 0;
+    btn.disabled = !hasNickname;
+  }
+}
+
+// 모험 시작
+function startAdventure() {
+  const input = document.getElementById('nickname-input');
+  const nickname = input?.value.trim();
+
+  if (!nickname) {
+    showToast('🧙 모험가 이름을 입력해주세요!');
+    return;
+  }
+
+  // 닉네임 저장
+  gameState.nickname = nickname;
+  saveState();
+
+  // 모달 닫기
+  closeAdventureInfo();
+
+  // 맵으로 이동
   scrollToMap();
-  // 자동으로 BGM 시작 시도
+
+  // 환영 메시지 표시
+  showWelcomeMessage();
+
+  // BGM 시작 시도
   const bgm = document.getElementById('bgm');
   const btn = document.getElementById('bgm-btn');
   const icon = btn?.querySelector('.bgm-icon');
@@ -754,9 +835,33 @@ function startGame() {
       btn?.classList.add('playing');
       if (icon) icon.textContent = '🔊';
     }).catch(e => {
-      // 사용자 상호작용 필요 - 조용히 실패
       console.log('BGM 자동재생 불가 - 버튼 클릭 필요');
     });
   }
+}
+window.startAdventure = startAdventure;
+
+// 환영 메시지 표시
+function showWelcomeMessage() {
+  const mapSection = document.getElementById('map');
+  const existingWelcome = document.querySelector('.welcome-message');
+
+  // 기존 메시지 제거
+  if (existingWelcome) {
+    existingWelcome.remove();
+  }
+
+  // 닉네임이 있으면 환영 메시지 표시
+  if (gameState.nickname && mapSection) {
+    const welcome = document.createElement('div');
+    welcome.className = 'welcome-message';
+    welcome.textContent = `🧙 ${gameState.nickname} 모험가, 환영해요!`;
+    mapSection.prepend(welcome);
+  }
+}
+
+// 게임 시작 (인트로에서 맵으로) - 기존 함수 유지 (호환성)
+function startGame() {
+  showAdventureInfo();
 }
 window.startGame = startGame;
