@@ -18,16 +18,16 @@ let gameState = {
   }
 };
 
-// 캐릭터 위치 데이터
+// 캐릭터 위치 데이터 - 왼쪽 아래에서 오른쪽 위로 일관되게 상승
 const stagePositions = {
-  0: { left: '5%', bottom: '15%' },
-  1: { left: '15%', bottom: '30%' },
-  2: { left: '28%', bottom: '45%' },
-  3: { left: '42%', bottom: '55%' },
-  4: { left: '56%', bottom: '45%' },
-  5: { left: '70%', bottom: '30%' },
-  6: { left: '82%', bottom: '18%' },
-  7: { right: '5%', top: '10%' }
+  0: { left: '3%', bottom: '8%' },
+  1: { left: '12%', bottom: '22%' },
+  2: { left: '24%', bottom: '36%' },
+  3: { left: '38%', bottom: '48%' },
+  4: { left: '52%', bottom: '58%' },
+  5: { left: '66%', bottom: '68%' },
+  6: { left: '78%', bottom: '78%' },
+  7: { right: '3%', top: '3%' }
 };
 
 // 초기화

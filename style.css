@@ -538,15 +538,15 @@ body {
   text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
 }
 
-/* 스테이지 위치 */
-.stage-start { left: 5%; bottom: 12%; }
-.stage-1 { left: 14%; bottom: 28%; }
-.stage-2 { left: 27%; bottom: 46%; }
-.stage-3 { left: 42%; bottom: 56%; }
-.stage-4 { left: 56%; bottom: 46%; }
-.stage-5 { left: 70%; bottom: 30%; }
-.stage-6 { left: 83%; bottom: 18%; }
-.stage-goal { right: 5%; top: 5%; }
+/* 스테이지 위치 - 왼쪽 아래에서 오른쪽 위로 일관되게 상승 */
+.stage-start { left: 3%; bottom: 8%; }
+.stage-1 { left: 12%; bottom: 22%; }
+.stage-2 { left: 24%; bottom: 36%; }
+.stage-3 { left: 38%; bottom: 48%; }
+.stage-4 { left: 52%; bottom: 58%; }
+.stage-5 { left: 66%; bottom: 68%; }
+.stage-6 { left: 78%; bottom: 78%; }
+.stage-goal { right: 3%; top: 3%; }
 
 /* 캐릭터 (우주선) */
 .character {
