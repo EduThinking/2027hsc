@@ -150,14 +150,15 @@
       <!-- 마법 파티클 -->
       <div class="magic-particles"></div>
 
-      <!-- 경로 라인 (3D 나선형 우주 경로) -->
+      <!-- 경로 라인 (아이소메트릭 나선 궤도) -->
       <svg class="path-line" viewBox="0 0 1000 700" preserveAspectRatio="none">
         <defs>
           <linearGradient id="magicGradient" x1="0%" y1="100%" x2="100%" y2="0%">
             <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:0.9" />
-            <stop offset="25%" style="stop-color:#8b5cf6;stop-opacity:0.9" />
-            <stop offset="50%" style="stop-color:#ec4899;stop-opacity:0.9" />
-            <stop offset="75%" style="stop-color:#f97316;stop-opacity:0.9" />
+            <stop offset="20%" style="stop-color:#8b5cf6;stop-opacity:0.9" />
+            <stop offset="40%" style="stop-color:#ec4899;stop-opacity:0.9" />
+            <stop offset="60%" style="stop-color:#f97316;stop-opacity:0.9" />
+            <stop offset="80%" style="stop-color:#22c55e;stop-opacity:0.9" />
             <stop offset="100%" style="stop-color:#fbbf24;stop-opacity:0.9" />
           </linearGradient>
           <filter id="glow">
@@ -168,12 +169,12 @@
             </feMerge>
           </filter>
         </defs>
-        <!-- 3D 나선형 경로 - S자 곡선으로 깊이감 표현 -->
-        <path class="quest-path-bg" d="M 100,650 C 50,550 50,450 100,380 C 150,310 300,280 450,260 C 600,240 750,280 800,350 C 850,420 880,350 780,200 C 680,50 550,30 500,50" />
+        <!-- 나선 궤도 경로: 출발(좌하) → 1(좌) → 2(좌상) → 3(중상) → 4(우중) → 5(우) → 6(우상) → 목표(중상) -->
+        <path class="quest-path-bg" d="M 130,630 C 60,520 60,400 140,330 C 220,260 350,240 450,230 C 550,220 680,260 770,380 C 820,440 810,340 720,180 C 650,80 520,50 480,60" />
         <!-- 메인 그라데이션 선 -->
-        <path class="quest-path" d="M 100,650 C 50,550 50,450 100,380 C 150,310 300,280 450,260 C 600,240 750,280 800,350 C 850,420 880,350 780,200 C 680,50 550,30 500,50" filter="url(#glow)" />
+        <path class="quest-path" d="M 130,630 C 60,520 60,400 140,330 C 220,260 350,240 450,230 C 550,220 680,260 770,380 C 820,440 810,340 720,180 C 650,80 520,50 480,60" filter="url(#glow)" />
         <!-- 움직이는 점선 -->
-        <path class="quest-path-dots" d="M 100,650 C 50,550 50,450 100,380 C 150,310 300,280 450,260 C 600,240 750,280 800,350 C 850,420 880,350 780,200 C 680,50 550,30 500,50" />
+        <path class="quest-path-dots" d="M 130,630 C 60,520 60,400 140,330 C 220,260 350,240 450,230 C 550,220 680,260 770,380 C 820,440 810,340 720,180 C 650,80 520,50 480,60" />
       </svg>
 
       <!-- 스테이지들 (행성) -->
@@ -427,143 +428,13 @@
           <p>아래 질문에 솔직하게 답해주세요. 나의 역량을 진단해드릴게요!</p>
         </div>
 
-        <!-- 질문 기반 역량 진단 -->
+        <!-- 질문 기반 역량 진단 - 역량별 12개씩 총 72개 중 랜덤 출제 -->
         <div class="competency-questions" id="competency-questions">
           <div class="question-progress">
-            <span id="question-progress-text">0 / 12</span> 응답 완료
+            <span id="question-progress-text">0 / 36</span> 응답 완료
           </div>
-
-          <!-- 질문들 (역량별 2개씩, 섞어서 배치) -->
-          <div class="question-item" data-competency="communication" data-question="1">
-            <p class="question-text">1. 내 생각을 다른 사람에게 조리있게 설명할 수 있다.</p>
-            <div class="answer-options">
-              <label><input type="radio" name="q1" value="1"><span>전혀 아니다</span></label>
-              <label><input type="radio" name="q1" value="2"><span>아니다</span></label>
-              <label><input type="radio" name="q1" value="3"><span>보통</span></label>
-              <label><input type="radio" name="q1" value="4"><span>그렇다</span></label>
-              <label><input type="radio" name="q1" value="5"><span>매우 그렇다</span></label>
-            </div>
-          </div>
-
-          <div class="question-item" data-competency="creativity" data-question="2">
-            <p class="question-text">2. 문제가 생기면 새로운 해결 방법을 떠올리려고 노력한다.</p>
-            <div class="answer-options">
-              <label><input type="radio" name="q2" value="1"><span>전혀 아니다</span></label>
-              <label><input type="radio" name="q2" value="2"><span>아니다</span></label>
-              <label><input type="radio" name="q2" value="3"><span>보통</span></label>
-              <label><input type="radio" name="q2" value="4"><span>그렇다</span></label>
-              <label><input type="radio" name="q2" value="5"><span>매우 그렇다</span></label>
-            </div>
-          </div>
-
-          <div class="question-item" data-competency="collaboration" data-question="3">
-            <p class="question-text">3. 조별 과제에서 팀원들과 역할을 잘 나누고 협력한다.</p>
-            <div class="answer-options">
-              <label><input type="radio" name="q3" value="1"><span>전혀 아니다</span></label>
-              <label><input type="radio" name="q3" value="2"><span>아니다</span></label>
-              <label><input type="radio" name="q3" value="3"><span>보통</span></label>
-              <label><input type="radio" name="q3" value="4"><span>그렇다</span></label>
-              <label><input type="radio" name="q3" value="5"><span>매우 그렇다</span></label>
-            </div>
-          </div>
-
-          <div class="question-item" data-competency="selfmanagement" data-question="4">
-            <p class="question-text">4. 스스로 공부 계획을 세우고 실천하는 편이다.</p>
-            <div class="answer-options">
-              <label><input type="radio" name="q4" value="1"><span>전혀 아니다</span></label>
-              <label><input type="radio" name="q4" value="2"><span>아니다</span></label>
-              <label><input type="radio" name="q4" value="3"><span>보통</span></label>
-              <label><input type="radio" name="q4" value="4"><span>그렇다</span></label>
-              <label><input type="radio" name="q4" value="5"><span>매우 그렇다</span></label>
-            </div>
-          </div>
-
-          <div class="question-item" data-competency="critical" data-question="5">
-            <p class="question-text">5. 뉴스나 정보를 볼 때 "정말 그럴까?" 하고 의심해본다.</p>
-            <div class="answer-options">
-              <label><input type="radio" name="q5" value="1"><span>전혀 아니다</span></label>
-              <label><input type="radio" name="q5" value="2"><span>아니다</span></label>
-              <label><input type="radio" name="q5" value="3"><span>보통</span></label>
-              <label><input type="radio" name="q5" value="4"><span>그렇다</span></label>
-              <label><input type="radio" name="q5" value="5"><span>매우 그렇다</span></label>
-            </div>
-          </div>
-
-          <div class="question-item" data-competency="knowledge" data-question="6">
-            <p class="question-text">6. 모르는 것이 있으면 인터넷이나 책에서 직접 찾아본다.</p>
-            <div class="answer-options">
-              <label><input type="radio" name="q6" value="1"><span>전혀 아니다</span></label>
-              <label><input type="radio" name="q6" value="2"><span>아니다</span></label>
-              <label><input type="radio" name="q6" value="3"><span>보통</span></label>
-              <label><input type="radio" name="q6" value="4"><span>그렇다</span></label>
-              <label><input type="radio" name="q6" value="5"><span>매우 그렇다</span></label>
-            </div>
-          </div>
-
-          <div class="question-item" data-competency="communication" data-question="7">
-            <p class="question-text">7. 친구의 이야기를 끝까지 잘 듣고 공감해준다.</p>
-            <div class="answer-options">
-              <label><input type="radio" name="q7" value="1"><span>전혀 아니다</span></label>
-              <label><input type="radio" name="q7" value="2"><span>아니다</span></label>
-              <label><input type="radio" name="q7" value="3"><span>보통</span></label>
-              <label><input type="radio" name="q7" value="4"><span>그렇다</span></label>
-              <label><input type="radio" name="q7" value="5"><span>매우 그렇다</span></label>
-            </div>
-          </div>
-
-          <div class="question-item" data-competency="creativity" data-question="8">
-            <p class="question-text">8. 남들과 다른 아이디어를 내는 것이 재미있다.</p>
-            <div class="answer-options">
-              <label><input type="radio" name="q8" value="1"><span>전혀 아니다</span></label>
-              <label><input type="radio" name="q8" value="2"><span>아니다</span></label>
-              <label><input type="radio" name="q8" value="3"><span>보통</span></label>
-              <label><input type="radio" name="q8" value="4"><span>그렇다</span></label>
-              <label><input type="radio" name="q8" value="5"><span>매우 그렇다</span></label>
-            </div>
-          </div>
-
-          <div class="question-item" data-competency="collaboration" data-question="9">
-            <p class="question-text">9. 의견이 다른 친구와도 대화를 통해 합의점을 찾는다.</p>
-            <div class="answer-options">
-              <label><input type="radio" name="q9" value="1"><span>전혀 아니다</span></label>
-              <label><input type="radio" name="q9" value="2"><span>아니다</span></label>
-              <label><input type="radio" name="q9" value="3"><span>보통</span></label>
-              <label><input type="radio" name="q9" value="4"><span>그렇다</span></label>
-              <label><input type="radio" name="q9" value="5"><span>매우 그렇다</span></label>
-            </div>
-          </div>
-
-          <div class="question-item" data-competency="selfmanagement" data-question="10">
-            <p class="question-text">10. 감정이 격해져도 차분하게 행동하려고 노력한다.</p>
-            <div class="answer-options">
-              <label><input type="radio" name="q10" value="1"><span>전혀 아니다</span></label>
-              <label><input type="radio" name="q10" value="2"><span>아니다</span></label>
-              <label><input type="radio" name="q10" value="3"><span>보통</span></label>
-              <label><input type="radio" name="q10" value="4"><span>그렇다</span></label>
-              <label><input type="radio" name="q10" value="5"><span>매우 그렇다</span></label>
-            </div>
-          </div>
-
-          <div class="question-item" data-competency="critical" data-question="11">
-            <p class="question-text">11. 여러 의견 중 어떤 게 맞는지 근거를 따져 판단한다.</p>
-            <div class="answer-options">
-              <label><input type="radio" name="q11" value="1"><span>전혀 아니다</span></label>
-              <label><input type="radio" name="q11" value="2"><span>아니다</span></label>
-              <label><input type="radio" name="q11" value="3"><span>보통</span></label>
-              <label><input type="radio" name="q11" value="4"><span>그렇다</span></label>
-              <label><input type="radio" name="q11" value="5"><span>매우 그렇다</span></label>
-            </div>
-          </div>
-
-          <div class="question-item" data-competency="knowledge" data-question="12">
-            <p class="question-text">12. 여러 정보를 비교하고 정리해서 활용할 수 있다.</p>
-            <div class="answer-options">
-              <label><input type="radio" name="q12" value="1"><span>전혀 아니다</span></label>
-              <label><input type="radio" name="q12" value="2"><span>아니다</span></label>
-              <label><input type="radio" name="q12" value="3"><span>보통</span></label>
-              <label><input type="radio" name="q12" value="4"><span>그렇다</span></label>
-              <label><input type="radio" name="q12" value="5"><span>매우 그렇다</span></label>
-            </div>
+          <div class="question-list" id="question-list">
+            <!-- JS에서 동적으로 생성 -->
           </div>
         </div>
 

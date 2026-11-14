@@ -610,65 +610,62 @@ body {
   text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
 }
 
-/* 스테이지 위치 - 3D 나선형 배치 */
+/* 스테이지 위치 - 아이소메트릭 나선 궤도 */
+/* 왼쪽 아래에서 시작 → 위로 올라가며 S자 커브 → 중앙 상단 목표 */
 .stage-start {
-  left: 8%;
-  bottom: 5%;
-  transform: scale(0.85);
+  left: 10%;
+  bottom: 6%;
+  transform: scale(0.75);
   z-index: 5;
 }
 
 .stage-1 {
-  left: 5%;
+  left: 4%;
   bottom: 28%;
-  transform: scale(0.92);
+  transform: scale(0.82);
   z-index: 6;
 }
 
 .stage-2 {
-  left: 22%;
-  bottom: 48%;
-  transform: scale(0.96);
+  left: 12%;
+  bottom: 50%;
+  transform: scale(0.88);
   z-index: 7;
 }
 
 .stage-3 {
-  left: 45%;
-  bottom: 55%;
-  transform: scale(1);
+  left: 32%;
+  bottom: 62%;
+  transform: scale(0.94);
   z-index: 8;
 }
 
 .stage-4 {
-  right: 28%;
-  bottom: 48%;
-  left: auto;
-  transform: scale(1.02);
+  left: 54%;
+  bottom: 52%;
+  transform: scale(1);
   z-index: 9;
 }
 
 .stage-5 {
-  right: 10%;
-  bottom: 30%;
-  left: auto;
-  transform: scale(1.05);
+  left: 72%;
+  bottom: 34%;
+  transform: scale(1.06);
   z-index: 10;
 }
 
 .stage-6 {
-  right: 25%;
-  top: 12%;
-  left: auto;
+  left: 62%;
+  top: 14%;
   bottom: auto;
-  transform: scale(1.08);
+  transform: scale(1.1);
   z-index: 11;
 }
 
 .stage-goal {
-  left: 45%;
-  top: 3%;
-  right: auto;
-  transform: scale(1.1);
+  left: 40%;
+  top: 2%;
+  transform: scale(1.15);
   z-index: 12;
 }
 

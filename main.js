@@ -18,16 +18,16 @@ let gameState = {
   }
 };
 
-// 캐릭터 위치 데이터 - 3D 나선형 배치
+// 캐릭터 위치 데이터 - 아이소메트릭 나선 궤도
 const stagePositions = {
-  0: { left: '8%', bottom: '5%' },
-  1: { left: '5%', bottom: '28%' },
-  2: { left: '22%', bottom: '48%' },
-  3: { left: '45%', bottom: '55%' },
-  4: { right: '28%', bottom: '48%' },
-  5: { right: '10%', bottom: '30%' },
-  6: { right: '25%', top: '12%' },
-  7: { left: '45%', top: '3%' }
+  0: { left: '10%', bottom: '6%' },
+  1: { left: '4%', bottom: '28%' },
+  2: { left: '12%', bottom: '50%' },
+  3: { left: '32%', bottom: '62%' },
+  4: { left: '54%', bottom: '52%' },
+  5: { left: '72%', bottom: '34%' },
+  6: { left: '62%', top: '14%' },
+  7: { left: '40%', top: '2%' }
 };
 
 // 초기화
@@ -183,7 +183,7 @@ function loadStageData(stageNum) {
     if (data.answered && data.competencies) {
       showCompetencyResult(data.competencies);
     } else {
-      // 아직 진단 전이면 질문 화면 리셋
+      // 아직 진단 전이면 질문 새로 생성
       const questionSection = document.getElementById('competency-questions');
       const resultSection = document.getElementById('competency-result');
       if (questionSection) questionSection.hidden = false;
@@ -193,12 +193,8 @@ function loadStageData(stageNum) {
       document.getElementById('save-competency-result').hidden = true;
       document.getElementById('complete-3').hidden = true;
 
-      // 이전 응답 복원
-      document.querySelectorAll('.question-item').forEach(item => {
-        item.classList.remove('answered');
-      });
-      updateQuestionProgress();
-      updateSubmitButton();
+      // 질문 새로 생성
+      generateCompetencyQuestions();
     }
   }
 
@@ -291,6 +287,145 @@ function updateQuizScore(stageNum) {
   }
 
   updateCompleteButton(stageNum);
+}
+
+// 역량별 12개 질문 데이터베이스
+const competencyQuestions = {
+  communication: [
+    "내 생각을 다른 사람에게 조리있게 설명할 수 있다.",
+    "친구의 이야기를 끝까지 잘 듣고 공감해준다.",
+    "발표할 때 청중의 반응을 살피며 말한다.",
+    "글이나 말로 내 의견을 분명하게 전달할 수 있다.",
+    "대화할 때 상대방의 말을 끊지 않고 경청한다.",
+    "다른 사람의 감정을 읽고 적절하게 반응한다.",
+    "복잡한 내용도 쉽게 풀어서 설명할 수 있다.",
+    "토론할 때 논리적으로 반박할 수 있다.",
+    "비언어적 표현(몸짓, 표정)도 잘 활용한다.",
+    "서로 다른 의견을 조율하는 대화를 잘한다.",
+    "글쓰기로 내 생각을 정리하는 것을 좋아한다.",
+    "모르는 사람에게도 자연스럽게 말을 걸 수 있다."
+  ],
+  collaboration: [
+    "조별 과제에서 팀원들과 역할을 잘 나누고 협력한다.",
+    "의견이 다른 친구와도 대화를 통해 합의점을 찾는다.",
+    "팀 안에서 갈등이 생기면 중재하려고 노력한다.",
+    "다른 사람의 의견을 존중하고 받아들인다.",
+    "팀 목표를 위해 내 역할에 책임감을 느낀다.",
+    "협업할 때 다른 사람의 강점을 잘 파악한다.",
+    "공동 작업에서 나의 기여를 스스로 평가한다.",
+    "팀원의 어려움을 보면 도와주려 한다.",
+    "혼자보다 여럿이 함께할 때 더 좋은 결과가 나온다고 생각한다.",
+    "회의나 토의에서 적극적으로 참여한다.",
+    "다양한 배경의 사람들과 잘 어울린다.",
+    "팀의 분위기를 긍정적으로 만들려고 노력한다."
+  ],
+  creativity: [
+    "문제가 생기면 새로운 해결 방법을 떠올리려고 노력한다.",
+    "남들과 다른 아이디어를 내는 것이 재미있다.",
+    "기존의 방식에 의문을 품고 다르게 시도해본다.",
+    "상상력을 발휘하는 활동을 좋아한다.",
+    "실패해도 새로운 방법을 계속 시도한다.",
+    "일상에서 영감을 얻어 창작활동을 한다.",
+    "규칙이나 틀에 얽매이지 않고 생각한다.",
+    "브레인스토밍할 때 많은 아이디어를 낸다.",
+    "다양한 분야의 지식을 융합해 생각한다.",
+    "예술, 음악, 글쓰기 등 창작활동에 관심이 있다.",
+    "문제를 다양한 각도에서 바라보려 한다.",
+    "호기심이 많고 새로운 것에 도전하길 좋아한다."
+  ],
+  critical: [
+    "뉴스나 정보를 볼 때 '정말 그럴까?' 하고 의심해본다.",
+    "여러 의견 중 어떤 게 맞는지 근거를 따져 판단한다.",
+    "주장의 논리적 허점을 찾아내는 편이다.",
+    "정보의 출처가 믿을 만한지 확인한다.",
+    "감정에 휘둘리지 않고 객관적으로 판단하려 한다.",
+    "다수의 의견이라도 틀릴 수 있다고 생각한다.",
+    "문제의 원인을 깊이 분석하려 한다.",
+    "결론을 내리기 전에 다양한 가능성을 검토한다.",
+    "숨겨진 가정이나 전제를 파악하려 한다.",
+    "증거 없이 믿는 것을 경계한다.",
+    "자신의 생각도 비판적으로 돌아본다.",
+    "복잡한 문제를 단계별로 분석할 수 있다."
+  ],
+  selfmanagement: [
+    "스스로 공부 계획을 세우고 실천하는 편이다.",
+    "감정이 격해져도 차분하게 행동하려고 노력한다.",
+    "마감 기한을 잘 지킨다.",
+    "스트레스를 건강하게 해소하는 방법이 있다.",
+    "목표를 세우고 꾸준히 노력한다.",
+    "시간을 효율적으로 관리한다.",
+    "실패해도 포기하지 않고 다시 도전한다.",
+    "나의 장단점을 잘 알고 있다.",
+    "건강한 생활습관을 유지하려 한다.",
+    "유혹에 흔들리지 않고 해야 할 일을 한다.",
+    "자기 반성을 통해 성장하려 한다.",
+    "어려운 상황에서도 긍정적 태도를 유지한다."
+  ],
+  knowledge: [
+    "모르는 것이 있으면 인터넷이나 책에서 직접 찾아본다.",
+    "여러 정보를 비교하고 정리해서 활용할 수 있다.",
+    "새로운 지식을 배우는 것을 즐긴다.",
+    "디지털 도구를 활용해 정보를 효율적으로 관리한다.",
+    "가짜 뉴스와 진짜 뉴스를 구별하려 노력한다.",
+    "필요한 정보를 빠르게 검색할 수 있다.",
+    "배운 지식을 실생활에 적용해본다.",
+    "다양한 매체(책, 영상, 기사 등)에서 정보를 얻는다.",
+    "정보를 체계적으로 분류하고 저장한다.",
+    "학습한 내용을 나만의 방식으로 정리한다.",
+    "관심 분야의 최신 정보를 꾸준히 확인한다.",
+    "정보의 신뢰성을 판단하는 기준이 있다."
+  ]
+};
+
+// 역량 진단 질문 생성 (역량별 6개씩 = 36개 질문)
+function generateCompetencyQuestions() {
+  const questionList = document.getElementById('question-list');
+  if (!questionList) return;
+
+  // 각 역량에서 6개씩 랜덤 선택
+  const selectedQuestions = [];
+  Object.keys(competencyQuestions).forEach(competency => {
+    const questions = [...competencyQuestions[competency]];
+    // 셔플
+    for (let i = questions.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [questions[i], questions[j]] = [questions[j], questions[i]];
+    }
+    // 6개 선택
+    questions.slice(0, 6).forEach(q => {
+      selectedQuestions.push({ competency, question: q });
+    });
+  });
+
+  // 전체 질문 셔플
+  for (let i = selectedQuestions.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [selectedQuestions[i], selectedQuestions[j]] = [selectedQuestions[j], selectedQuestions[i]];
+  }
+
+  // HTML 생성
+  let html = '';
+  selectedQuestions.forEach((item, idx) => {
+    const num = idx + 1;
+    html += `
+      <div class="question-item" data-competency="${item.competency}" data-question="${num}">
+        <p class="question-text">${num}. ${item.question}</p>
+        <div class="answer-options">
+          <label><input type="radio" name="q${num}" value="1"><span>전혀 아니다</span></label>
+          <label><input type="radio" name="q${num}" value="2"><span>아니다</span></label>
+          <label><input type="radio" name="q${num}" value="3"><span>보통</span></label>
+          <label><input type="radio" name="q${num}" value="4"><span>그렇다</span></label>
+          <label><input type="radio" name="q${num}" value="5"><span>매우 그렇다</span></label>
+        </div>
+      </div>
+    `;
+  });
+
+  questionList.innerHTML = html;
+
+  // 이벤트 핸들러 설정
+  setupCompetencyQuestionHandlers();
+  updateQuestionProgress();
 }
 
 // 역량 진단 질문 핸들러 설정
