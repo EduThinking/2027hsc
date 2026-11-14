@@ -11,7 +11,7 @@ let gameState = {
   stageData: {
     1: { quizScores: {} },
     2: { dreams: '', activities: '', strengths: '', tracks: [] },
-    3: { competencies: {} },
+    3: { competencies: {}, answered: false },
     4: { quizScores: {} },
     5: { general: [], career: [], fusion: [] },
     6: { year1: '', year2: '', year3: '', goal: '' }
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadState();
   updateUI();
   setupQuizHandlers();
-  setupRatingHandlers();
+  setupCompetencyQuestionHandlers();
   setupSubjectHandlers();
   setupFormHandlers();
   setupNicknameHandler();
@@ -179,14 +179,27 @@ function loadStageData(stageNum) {
   }
 
   if (stageNum === 3) {
-    Object.entries(data.competencies || {}).forEach(([key, value]) => {
-      const container = document.querySelector(`[data-competency="${key}"]`);
-      if (container) {
-        container.querySelectorAll('.star').forEach((star, idx) => {
-          star.classList.toggle('active', idx < value);
-        });
-      }
-    });
+    // 이미 진단을 완료했다면 결과 화면 표시
+    if (data.answered && data.competencies) {
+      showCompetencyResult(data.competencies);
+    } else {
+      // 아직 진단 전이면 질문 화면 리셋
+      const questionSection = document.getElementById('competency-questions');
+      const resultSection = document.getElementById('competency-result');
+      if (questionSection) questionSection.hidden = false;
+      if (resultSection) resultSection.hidden = true;
+
+      document.getElementById('submit-competency').hidden = false;
+      document.getElementById('save-competency-result').hidden = true;
+      document.getElementById('complete-3').hidden = true;
+
+      // 이전 응답 복원
+      document.querySelectorAll('.question-item').forEach(item => {
+        item.classList.remove('answered');
+      });
+      updateQuestionProgress();
+      updateSubmitButton();
+    }
   }
 
   if (stageNum === 5) {
@@ -280,43 +293,226 @@ function updateQuizScore(stageNum) {
   updateCompleteButton(stageNum);
 }
 
-// 별점 핸들러 설정
-function setupRatingHandlers() {
-  document.querySelectorAll('.rating-stars').forEach(container => {
-    const competency = container.dataset.competency;
-    const stars = container.querySelectorAll('.star');
+// 역량 진단 질문 핸들러 설정
+function setupCompetencyQuestionHandlers() {
+  const questions = document.querySelectorAll('.question-item');
 
-    stars.forEach((star, idx) => {
-      star.addEventListener('click', () => {
-        const value = idx + 1;
-
-        // 별 업데이트
-        stars.forEach((s, i) => {
-          s.classList.toggle('active', i < value);
-        });
-
-        // 저장
-        gameState.stageData[3].competencies[competency] = value;
-        saveState();
-        updateCompleteButton(3);
-      });
-
-      // 호버 효과
-      star.addEventListener('mouseenter', () => {
-        stars.forEach((s, i) => {
-          s.style.opacity = i <= idx ? '1' : '0.3';
-        });
-      });
-
-      container.addEventListener('mouseleave', () => {
-        stars.forEach((s, i) => {
-          const currentValue = gameState.stageData[3].competencies[competency] || 0;
-          s.style.opacity = i < currentValue ? '1' : '0.3';
-        });
+  questions.forEach(item => {
+    const inputs = item.querySelectorAll('input[type="radio"]');
+    inputs.forEach(input => {
+      input.addEventListener('change', () => {
+        item.classList.add('answered');
+        updateQuestionProgress();
+        updateSubmitButton();
       });
     });
   });
 }
+
+// 질문 진행 상황 업데이트
+function updateQuestionProgress() {
+  const total = document.querySelectorAll('.question-item').length;
+  const answered = document.querySelectorAll('.question-item.answered').length;
+  const progressText = document.getElementById('question-progress-text');
+  if (progressText) {
+    progressText.textContent = `${answered} / ${total}`;
+  }
+}
+
+// 제출 버튼 상태 업데이트
+function updateSubmitButton() {
+  const total = document.querySelectorAll('.question-item').length;
+  const answered = document.querySelectorAll('.question-item.answered').length;
+  const submitBtn = document.getElementById('submit-competency');
+  if (submitBtn) {
+    submitBtn.disabled = answered < total;
+  }
+}
+
+// 역량 진단 제출
+function submitCompetencyTest() {
+  const competencyScores = {
+    communication: [],
+    collaboration: [],
+    creativity: [],
+    critical: [],
+    selfmanagement: [],
+    knowledge: []
+  };
+
+  // 각 질문의 응답 수집
+  document.querySelectorAll('.question-item').forEach(item => {
+    const competency = item.dataset.competency;
+    const selected = item.querySelector('input[type="radio"]:checked');
+    if (selected && competencyScores[competency]) {
+      competencyScores[competency].push(parseInt(selected.value));
+    }
+  });
+
+  // 역량별 평균 계산 (5점 만점)
+  const results = {};
+  Object.keys(competencyScores).forEach(key => {
+    const scores = competencyScores[key];
+    if (scores.length > 0) {
+      const avg = scores.reduce((a, b) => a + b, 0) / scores.length;
+      results[key] = Math.round(avg * 10) / 10;
+    }
+  });
+
+  // 저장
+  gameState.stageData[3].competencies = results;
+  gameState.stageData[3].answered = true;
+  saveState();
+
+  // 효과음
+  playSFX('complete');
+
+  // 결과 표시
+  showCompetencyResult(results);
+}
+window.submitCompetencyTest = submitCompetencyTest;
+
+// 역량 결과 표시
+function showCompetencyResult(results) {
+  const questionSection = document.getElementById('competency-questions');
+  const resultSection = document.getElementById('competency-result');
+  const resultChart = document.getElementById('result-chart');
+  const resultSummary = document.getElementById('result-summary');
+
+  // 질문 숨기고 결과 표시
+  questionSection.hidden = true;
+  resultSection.hidden = false;
+
+  // 버튼 상태 변경
+  document.getElementById('submit-competency').hidden = true;
+  document.getElementById('save-competency-result').hidden = false;
+  document.getElementById('complete-3').hidden = false;
+  document.getElementById('complete-3').disabled = false;
+
+  const labels = {
+    communication: { name: '의사소통', icon: '💬' },
+    collaboration: { name: '협업', icon: '🤝' },
+    creativity: { name: '창의적 사고', icon: '💡' },
+    critical: { name: '비판적 사고', icon: '🔍' },
+    selfmanagement: { name: '자기관리', icon: '📊' },
+    knowledge: { name: '지식정보처리', icon: '🌐' }
+  };
+
+  // 차트 그리기
+  let chartHTML = '';
+  const sortedResults = Object.entries(results).sort((a, b) => b[1] - a[1]);
+
+  sortedResults.forEach(([key, score]) => {
+    const label = labels[key];
+    const percent = (score / 5) * 100;
+    let levelClass = 'normal';
+    if (score >= 4.5) levelClass = 'excellent';
+    else if (score >= 3.5) levelClass = 'good';
+    else if (score < 2.5) levelClass = 'low';
+
+    chartHTML += `
+      <div class="result-bar-item">
+        <div class="result-bar-label">
+          <span>${label.icon}</span>
+          <span>${label.name}</span>
+        </div>
+        <div class="result-bar-container">
+          <div class="result-bar-fill ${levelClass}" style="width: 0%">
+            <span class="result-bar-score">${score.toFixed(1)}</span>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+
+  resultChart.innerHTML = chartHTML;
+
+  // 애니메이션으로 바 채우기
+  setTimeout(() => {
+    document.querySelectorAll('.result-bar-fill').forEach((bar, idx) => {
+      const score = sortedResults[idx][1];
+      bar.style.width = `${(score / 5) * 100}%`;
+    });
+  }, 100);
+
+  // 강점/성장 영역 분석
+  const strengths = sortedResults.filter(([_, score]) => score >= 4).map(([key]) => labels[key].name);
+  const growth = sortedResults.filter(([_, score]) => score < 3).map(([key]) => labels[key].name);
+
+  let summaryHTML = '<h4>📋 분석 결과</h4>';
+
+  if (strengths.length > 0) {
+    summaryHTML += `<p>🌟 <strong>강점 역량:</strong> ${strengths.map(s => `<span class="strength-tag">${s}</span>`).join(' ')}</p>`;
+  }
+
+  if (growth.length > 0) {
+    summaryHTML += `<p>🌱 <strong>성장 가능 영역:</strong> ${growth.map(g => `<span class="growth-tag">${g}</span>`).join(' ')}</p>`;
+  }
+
+  if (strengths.length === 0 && growth.length === 0) {
+    summaryHTML += `<p>균형 잡힌 역량을 가지고 있어요! 다양한 분야에서 활약할 수 있는 잠재력이 있습니다.</p>`;
+  } else {
+    summaryHTML += `<p style="margin-top: 1rem;">강점을 살리고, 성장 영역을 발전시켜 나가세요! 고교학점제에서 이 역량들을 키울 수 있는 과목을 선택해보면 좋겠어요.</p>`;
+  }
+
+  resultSummary.innerHTML = summaryHTML;
+}
+
+// 역량 결과 저장 (다운로드)
+function saveCompetencyResult() {
+  const results = gameState.stageData[3].competencies;
+  const nickname = gameState.nickname || '모험가';
+
+  const labels = {
+    communication: '의사소통',
+    collaboration: '협업',
+    creativity: '창의적 사고',
+    critical: '비판적 사고',
+    selfmanagement: '자기관리',
+    knowledge: '지식정보처리'
+  };
+
+  let text = `
+══════════════════════════════════════
+     💪 ${nickname}의 핵심역량 진단 결과
+══════════════════════════════════════
+
+📅 진단일: ${new Date().toLocaleDateString('ko-KR')}
+
+──────────────────────────────────────
+🎯 역량별 점수 (5점 만점)
+──────────────────────────────────────
+${Object.entries(results).map(([key, score]) => {
+  const stars = '★'.repeat(Math.round(score)) + '☆'.repeat(5 - Math.round(score));
+  return `• ${labels[key]}: ${stars} (${score.toFixed(1)}점)`;
+}).join('\n')}
+
+──────────────────────────────────────
+📋 분석
+──────────────────────────────────────
+${Object.entries(results).filter(([_, s]) => s >= 4).length > 0
+  ? '🌟 강점: ' + Object.entries(results).filter(([_, s]) => s >= 4).map(([k]) => labels[k]).join(', ')
+  : ''}
+${Object.entries(results).filter(([_, s]) => s < 3).length > 0
+  ? '🌱 성장 영역: ' + Object.entries(results).filter(([_, s]) => s < 3).map(([k]) => labels[k]).join(', ')
+  : ''}
+
+══════════════════════════════════════
+     나의 강점을 살려 진로를 설계하자! 🚀
+══════════════════════════════════════
+`.trim();
+
+  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `역량진단_${nickname}_${new Date().toISOString().slice(0,10)}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+
+  showToast('📥 역량 진단 결과가 저장되었어요!');
+}
+window.saveCompetencyResult = saveCompetencyResult;
 
 // 과목 선택 핸들러
 function setupSubjectHandlers() {
@@ -420,8 +616,7 @@ function updateCompleteButton(stageNum) {
   }
 
   if (stageNum === 3) {
-    const comps = gameState.stageData[3].competencies;
-    canComplete = Object.keys(comps).length >= 6;
+    canComplete = gameState.stageData[3].answered === true;
   }
 
   if (stageNum === 4) {
@@ -548,7 +743,8 @@ function showFinalResult() {
           selfmanagement: '자기관리',
           knowledge: '지식정보처리'
         };
-        return `<div class="result-item"><strong>${labels[key]}:</strong> ${'⭐'.repeat(value)}</div>`;
+        const starCount = Math.round(value);
+        return `<div class="result-item"><strong>${labels[key]}:</strong> ${'⭐'.repeat(starCount)}${'☆'.repeat(5-starCount)} (${value.toFixed(1)}점)</div>`;
       }).join('')}
     </div>
 
@@ -630,7 +826,8 @@ ${Object.entries(data[3].competencies || {}).map(([key, value]) => {
     selfmanagement: '자기관리',
     knowledge: '지식정보처리'
   };
-  return `• ${labels[key]}: ${'★'.repeat(value)}${'☆'.repeat(5-value)}`;
+  const starCount = Math.round(value);
+  return `• ${labels[key]}: ${'★'.repeat(starCount)}${'☆'.repeat(5-starCount)} (${value.toFixed ? value.toFixed(1) : value}점)`;
 }).join('\n')}
 
 ──────────────────────────────────────
