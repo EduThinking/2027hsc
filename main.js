@@ -18,16 +18,16 @@ let gameState = {
   }
 };
 
-// 캐릭터 위치 데이터 - 왼쪽 아래에서 오른쪽 위로 일관되게 상승
+// 캐릭터 위치 데이터 - 3D 나선형 배치
 const stagePositions = {
-  0: { left: '3%', bottom: '8%' },
-  1: { left: '12%', bottom: '22%' },
-  2: { left: '24%', bottom: '36%' },
-  3: { left: '38%', bottom: '48%' },
-  4: { left: '52%', bottom: '58%' },
-  5: { left: '66%', bottom: '68%' },
-  6: { left: '78%', bottom: '78%' },
-  7: { right: '3%', top: '3%' }
+  0: { left: '8%', bottom: '5%' },
+  1: { left: '5%', bottom: '28%' },
+  2: { left: '22%', bottom: '48%' },
+  3: { left: '45%', bottom: '55%' },
+  4: { right: '28%', bottom: '48%' },
+  5: { right: '10%', bottom: '30%' },
+  6: { right: '25%', top: '12%' },
+  7: { left: '45%', top: '3%' }
 };
 
 // 초기화

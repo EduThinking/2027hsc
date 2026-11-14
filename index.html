@@ -150,37 +150,30 @@
       <!-- 마법 파티클 -->
       <div class="magic-particles"></div>
 
-      <!-- 경로 라인 (마법 빛 효과) -->
-      <svg class="path-line" viewBox="0 0 1000 600" preserveAspectRatio="none">
+      <!-- 경로 라인 (3D 나선형 우주 경로) -->
+      <svg class="path-line" viewBox="0 0 1000 700" preserveAspectRatio="none">
         <defs>
           <linearGradient id="magicGradient" x1="0%" y1="100%" x2="100%" y2="0%">
-            <stop offset="0%" style="stop-color:#f472b6;stop-opacity:0.9" />
-            <stop offset="50%" style="stop-color:#a78bfa;stop-opacity:0.9" />
-            <stop offset="100%" style="stop-color:#60a5fa;stop-opacity:0.9" />
+            <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:0.9" />
+            <stop offset="25%" style="stop-color:#8b5cf6;stop-opacity:0.9" />
+            <stop offset="50%" style="stop-color:#ec4899;stop-opacity:0.9" />
+            <stop offset="75%" style="stop-color:#f97316;stop-opacity:0.9" />
+            <stop offset="100%" style="stop-color:#fbbf24;stop-opacity:0.9" />
           </linearGradient>
           <filter id="glow">
-            <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+            <feGaussianBlur stdDeviation="5" result="coloredBlur"/>
             <feMerge>
               <feMergeNode in="coloredBlur"/>
               <feMergeNode in="SourceGraphic"/>
             </feMerge>
           </filter>
         </defs>
-        <!-- 배경 두꺼운 선 - 왼쪽 아래에서 오른쪽 위로 일관되게 상승 -->
-        <path class="quest-path-bg" d="M 50,550 L 150,470 L 280,390 L 420,310 L 560,240 L 700,170 L 820,110 L 950,40" />
+        <!-- 3D 나선형 경로 - S자 곡선으로 깊이감 표현 -->
+        <path class="quest-path-bg" d="M 100,650 C 50,550 50,450 100,380 C 150,310 300,280 450,260 C 600,240 750,280 800,350 C 850,420 880,350 780,200 C 680,50 550,30 500,50" />
         <!-- 메인 그라데이션 선 -->
-        <path class="quest-path" d="M 50,550 L 150,470 L 280,390 L 420,310 L 560,240 L 700,170 L 820,110 L 950,40" filter="url(#glow)" />
+        <path class="quest-path" d="M 100,650 C 50,550 50,450 100,380 C 150,310 300,280 450,260 C 600,240 750,280 800,350 C 850,420 880,350 780,200 C 680,50 550,30 500,50" filter="url(#glow)" />
         <!-- 움직이는 점선 -->
-        <path class="quest-path-dots" d="M 50,550 L 150,470 L 280,390 L 420,310 L 560,240 L 700,170 L 820,110 L 950,40" />
-        <!-- 스테이지 연결점 - 출발부터 목표까지 -->
-        <circle cx="50" cy="550" r="8" fill="#ffd700" filter="url(#glow)" />
-        <circle cx="150" cy="470" r="6" fill="#a78bfa" />
-        <circle cx="280" cy="390" r="6" fill="#a78bfa" />
-        <circle cx="420" cy="310" r="6" fill="#a78bfa" />
-        <circle cx="560" cy="240" r="6" fill="#a78bfa" />
-        <circle cx="700" cy="170" r="6" fill="#a78bfa" />
-        <circle cx="820" cy="110" r="6" fill="#a78bfa" />
-        <circle cx="950" cy="40" r="8" fill="#ffd700" filter="url(#glow)" />
+        <path class="quest-path-dots" d="M 100,650 C 50,550 50,450 100,380 C 150,310 300,280 450,260 C 600,240 750,280 800,350 C 850,420 880,350 780,200 C 680,50 550,30 500,50" />
       </svg>
 
       <!-- 스테이지들 (행성) -->
