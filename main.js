@@ -152,6 +152,7 @@ function openQuest(stageNum) {
   if (modal) {
     modal.hidden = false;
     loadStageData(stageNum);
+    playSFX('quest-start'); // 퀘스트 시작 효과음
   }
 }
 window.openQuest = openQuest;
@@ -462,8 +463,13 @@ function completeQuest(stageNum) {
   closeQuest();
   updateProgress();
   updateStageStates();
-  moveCharacter(true); // 애니메이션과 함께 이동
-  playSFX('complete');
+
+  // 우주선 이동 효과음 + 애니메이션
+  playSFX('whoosh');
+  moveCharacter(true);
+
+  // 완료 효과음은 약간 딜레이 후
+  setTimeout(() => playSFX('complete'), 500);
 
   // 성공 모달
   const successModal = document.getElementById('success-modal');
