@@ -100,6 +100,38 @@ let minimapCanvas, minimapCtx;
 let animationId;
 let nearPlanet = null;
 
+// 이미지 로드
+const images = {
+  rocket: null,
+  astronauts: null,
+  loaded: false
+};
+
+function loadImages() {
+  return new Promise((resolve) => {
+    let loadedCount = 0;
+    const totalImages = 2;
+    
+    const onLoad = () => {
+      loadedCount++;
+      if (loadedCount >= totalImages) {
+        images.loaded = true;
+        resolve();
+      }
+    };
+    
+    images.rocket = new Image();
+    images.rocket.onload = onLoad;
+    images.rocket.onerror = onLoad;
+    images.rocket.src = 'assets/rocket.png';
+    
+    images.astronauts = new Image();
+    images.astronauts.onload = onLoad;
+    images.astronauts.onerror = onLoad;
+    images.astronauts.src = 'assets/astronauts.png';
+  });
+}
+
 // 효과음
 const sounds = {
   fly: null,
@@ -212,7 +244,11 @@ function startGame() {
   initCanvas();
   setupInput();
   updateProgressUI();
-  gameLoop();
+  
+  // 이미지 로드 후 게임 시작
+  loadImages().then(() => {
+    gameLoop();
+  });
 }
 window.startGame = startGame;
 
@@ -464,14 +500,15 @@ function updateShootingStars() {
 
 // 렌더링
 function render() {
-  // 우주 배경 그라데이션
+  // 귀여운 우주 배경 그라데이션 (보라/파랑 톤)
   const bgGradient = ctx.createRadialGradient(
     canvas.width / 2, canvas.height / 2, 0,
     canvas.width / 2, canvas.height / 2, Math.max(canvas.width, canvas.height)
   );
-  bgGradient.addColorStop(0, '#0d0d20');
-  bgGradient.addColorStop(0.5, '#080815');
-  bgGradient.addColorStop(1, '#020208');
+  bgGradient.addColorStop(0, '#2a2a5a');   // 중앙: 밝은 보라
+  bgGradient.addColorStop(0.4, '#1e1e4a'); // 중간: 네이비
+  bgGradient.addColorStop(0.7, '#151540'); // 외곽: 진한 보라
+  bgGradient.addColorStop(1, '#0a0a2a');   // 가장자리: 어두운 네이비
   ctx.fillStyle = bgGradient;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   
@@ -693,19 +730,31 @@ function drawPlayer() {
   ctx.translate(screenX, screenY);
   ctx.rotate(player.rotation);
   
-  // 추진 불꽃 (이동 중일 때)
-  if (keys.up || keys.down || keys.left || keys.right) {
-    ctx.font = '16px sans-serif';
+  // 로켓 이미지 또는 이모지
+  if (images.rocket && images.rocket.complete && images.rocket.naturalWidth > 0) {
+    const rocketSize = 80;
+    ctx.drawImage(images.rocket, -rocketSize/2, -rocketSize/2, rocketSize, rocketSize);
+    
+    // 추진 불꽃 (이동 중일 때)
+    if (keys.up || keys.down || keys.left || keys.right || isMovingToTarget) {
+      ctx.font = '20px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('🔥', 0, rocketSize/2 + 10);
+    }
+  } else {
+    // 폴백: 이모지
+    if (keys.up || keys.down || keys.left || keys.right || isMovingToTarget) {
+      ctx.font = '16px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('🔥', 0, 25);
+    }
+    ctx.font = '40px sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText('🔥', 0, 25);
+    ctx.fillText(gameState.ship, 0, 0);
   }
-  
-  // 우주선
-  ctx.font = '40px sans-serif';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(gameState.ship, 0, 0);
   
   ctx.restore();
 }
