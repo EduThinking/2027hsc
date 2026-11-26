@@ -107,35 +107,69 @@ const sounds = {
 };
 
 function initSounds() {
-  // 비행 효과음 (우주선 엔진)
-  sounds.fly = new Audio('https://cdn.pixabay.com/audio/2022/03/15/audio_7625e92871.mp3');
-  sounds.fly.volume = 0.25;
-  sounds.fly.loop = true;
-  
-  // 도착 효과음
-  sounds.arrive = new Audio('https://cdn.pixabay.com/audio/2022/03/24/audio_7753e01481.mp3');
-  sounds.arrive.volume = 0.4;
+  // Web Audio API로 간단한 효과음 생성
+  try {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    
+    // 비행 소리 생성 함수
+    sounds.flyCtx = audioCtx;
+    sounds.flyOsc = null;
+    
+    sounds.arriveCtx = audioCtx;
+  } catch (e) {
+    console.log('오디오 초기화 실패');
+  }
 }
 
 function playFlySound() {
-  if (sounds.fly && sounds.fly.paused) {
-    sounds.fly.currentTime = 0;
-    sounds.fly.play().catch(() => {});
-  }
+  try {
+    if (sounds.flyCtx && !sounds.flyOsc) {
+      const ctx = sounds.flyCtx;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(80, ctx.currentTime);
+      gain.gain.setValueAtTime(0.08, ctx.currentTime);
+      
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      
+      sounds.flyOsc = osc;
+      sounds.flyGain = gain;
+    }
+  } catch (e) {}
 }
 
 function stopFlySound() {
-  if (sounds.fly && !sounds.fly.paused) {
-    sounds.fly.pause();
-    sounds.fly.currentTime = 0;
-  }
+  try {
+    if (sounds.flyOsc) {
+      sounds.flyOsc.stop();
+      sounds.flyOsc = null;
+    }
+  } catch (e) {}
 }
 
 function playArriveSound() {
-  if (sounds.arrive) {
-    sounds.arrive.currentTime = 0;
-    sounds.arrive.play().catch(() => {});
-  }
+  try {
+    if (sounds.arriveCtx) {
+      const ctx = sounds.arriveCtx;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(600, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.1);
+      gain.gain.setValueAtTime(0.3, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+      
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.3);
+    }
+  } catch (e) {}
 }
 
 // 초기화
