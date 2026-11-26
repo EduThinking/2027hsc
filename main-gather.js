@@ -100,6 +100,44 @@ let minimapCanvas, minimapCtx;
 let animationId;
 let nearPlanet = null;
 
+// 효과음
+const sounds = {
+  fly: null,
+  arrive: null
+};
+
+function initSounds() {
+  // 비행 효과음 (우주선 엔진)
+  sounds.fly = new Audio('https://cdn.pixabay.com/audio/2022/03/15/audio_7625e92871.mp3');
+  sounds.fly.volume = 0.25;
+  sounds.fly.loop = true;
+  
+  // 도착 효과음
+  sounds.arrive = new Audio('https://cdn.pixabay.com/audio/2022/03/24/audio_7753e01481.mp3');
+  sounds.arrive.volume = 0.4;
+}
+
+function playFlySound() {
+  if (sounds.fly && sounds.fly.paused) {
+    sounds.fly.currentTime = 0;
+    sounds.fly.play().catch(() => {});
+  }
+}
+
+function stopFlySound() {
+  if (sounds.fly && !sounds.fly.paused) {
+    sounds.fly.pause();
+    sounds.fly.currentTime = 0;
+  }
+}
+
+function playArriveSound() {
+  if (sounds.arrive) {
+    sounds.arrive.currentTime = 0;
+    sounds.arrive.play().catch(() => {});
+  }
+}
+
 // 초기화
 document.addEventListener('DOMContentLoaded', () => {
   loadState();
@@ -136,6 +174,7 @@ function startGame() {
   document.getElementById('game').hidden = false;
   document.getElementById('player-name').textContent = nickname;
   
+  initSounds();
   initCanvas();
   setupInput();
   updateProgressUI();
@@ -228,6 +267,7 @@ function handleCanvasClick(e) {
       // 행성 클릭 - 그 행성으로 이동 시작
       moveTarget = { x: planet.x, y: planet.y, planet: planet };
       isMovingToTarget = true;
+      playFlySound();
       return;
     }
   }
@@ -235,6 +275,7 @@ function handleCanvasClick(e) {
   // 빈 공간 클릭 - 그 위치로 이동
   moveTarget = { x: clickX, y: clickY, planet: null };
   isMovingToTarget = true;
+  playFlySound();
 }
 
 // 터치 처리
@@ -250,12 +291,15 @@ function handleCanvasTouch(e) {
     if (dist < planet.radius + 30) {
       moveTarget = { x: planet.x, y: planet.y, planet: planet };
       isMovingToTarget = true;
+      playFlySound();
       return;
     }
   }
   
   moveTarget = { x: clickX, y: clickY, planet: null };
   isMovingToTarget = true;
+  playFlySound();
+}
 
 // 게임 루프
 function gameLoop() {
@@ -271,6 +315,9 @@ function update() {
   
   // 키보드 입력이 있으면 클릭 이동 취소
   if (keys.up || keys.down || keys.left || keys.right) {
+    if (isMovingToTarget) {
+      stopFlySound();
+    }
     isMovingToTarget = false;
     moveTarget = null;
   }
@@ -287,6 +334,8 @@ function update() {
     if (distToTarget < 10) {
       // 목표에 도착
       isMovingToTarget = false;
+      stopFlySound();
+      playArriveSound();
       if (moveTarget.planet) {
         // 행성에 도착하면 자동으로 퀘스트 열기
         nearPlanet = moveTarget.planet;
