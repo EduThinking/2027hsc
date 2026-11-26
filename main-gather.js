@@ -472,7 +472,7 @@ function render() {
     
     const gradient = ctx.createRadialGradient(screenX, screenY, 0, screenX, screenY, neb.radius);
     gradient.addColorStop(0, neb.color);
-    gradient.addColorStop(0.6, neb.color.replace(')', ', 0.5)').replace('rgba', 'rgba'));
+    gradient.addColorStop(0.6, neb.color.replace(/[\d.]+\)$/, '0.05)'));
     gradient.addColorStop(1, 'transparent');
     
     ctx.fillStyle = gradient;
