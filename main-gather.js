@@ -31,23 +31,41 @@ const planets = [
   { id: 6, name: '설계 행성', icon: '🗺️', color: '#fbbf24', x: 1200, y: 300, radius: 60 },
 ];
 
-// 별 배경 (랜덤 생성)
+// 별 배경 (랜덤 생성) - 더 많은 별로 우주 느낌
 const stars = [];
-for (let i = 0; i < 200; i++) {
+for (let i = 0; i < 500; i++) {
   stars.push({
     x: Math.random() * MAP_WIDTH,
     y: Math.random() * MAP_HEIGHT,
-    size: Math.random() * 2 + 0.5,
-    brightness: Math.random()
+    size: Math.random() * 2.5 + 0.3,
+    brightness: Math.random(),
+    twinkleSpeed: Math.random() * 3 + 1
   });
 }
 
-// 성운 (장식)
+// 먼 은하들 (배경 장식)
+const galaxies = [];
+for (let i = 0; i < 8; i++) {
+  galaxies.push({
+    x: Math.random() * MAP_WIDTH,
+    y: Math.random() * MAP_HEIGHT,
+    radius: Math.random() * 80 + 40,
+    rotation: Math.random() * Math.PI * 2,
+    color: ['#8b5cf6', '#ec4899', '#3b82f6', '#06b6d4'][Math.floor(Math.random() * 4)]
+  });
+}
+
+// 성운 (장식) - 더 풍부한 색상
 const nebulae = [
-  { x: 500, y: 500, radius: 300, color: 'rgba(139, 92, 246, 0.1)' },
-  { x: 1500, y: 800, radius: 400, color: 'rgba(236, 72, 153, 0.08)' },
-  { x: 900, y: 1200, radius: 350, color: 'rgba(59, 130, 246, 0.1)' },
+  { x: 500, y: 500, radius: 350, color: 'rgba(139, 92, 246, 0.15)' },
+  { x: 1500, y: 800, radius: 450, color: 'rgba(236, 72, 153, 0.12)' },
+  { x: 900, y: 1200, radius: 400, color: 'rgba(59, 130, 246, 0.15)' },
+  { x: 1800, y: 400, radius: 300, color: 'rgba(6, 182, 212, 0.1)' },
+  { x: 300, y: 700, radius: 280, color: 'rgba(249, 115, 22, 0.08)' },
 ];
+
+// 유성 (가끔 지나감)
+let shootingStars = [];
 
 // 플레이어 상태
 let player = {
@@ -71,6 +89,10 @@ const keys = {
   right: false,
   action: false
 };
+
+// 클릭 이동 목표
+let moveTarget = null;
+let isMovingToTarget = false;
 
 // 캔버스
 let canvas, ctx;
@@ -187,7 +209,53 @@ function setupInput() {
       openQuest(nearPlanet.id);
     }
   });
+  
+  // 캔버스 클릭으로 행성에 이동
+  canvas.addEventListener('click', handleCanvasClick);
+  canvas.addEventListener('touchend', handleCanvasTouch);
 }
+
+// 캔버스 클릭 처리
+function handleCanvasClick(e) {
+  const rect = canvas.getBoundingClientRect();
+  const clickX = e.clientX - rect.left + camera.x;
+  const clickY = e.clientY - rect.top + camera.y;
+  
+  // 행성 클릭 체크
+  for (const planet of planets) {
+    const dist = distance(clickX, clickY, planet.x, planet.y);
+    if (dist < planet.radius + 30) {
+      // 행성 클릭 - 그 행성으로 이동 시작
+      moveTarget = { x: planet.x, y: planet.y, planet: planet };
+      isMovingToTarget = true;
+      return;
+    }
+  }
+  
+  // 빈 공간 클릭 - 그 위치로 이동
+  moveTarget = { x: clickX, y: clickY, planet: null };
+  isMovingToTarget = true;
+}
+
+// 터치 처리
+function handleCanvasTouch(e) {
+  if (e.touches && e.touches.length > 0) return; // 멀티터치 무시
+  const touch = e.changedTouches[0];
+  const rect = canvas.getBoundingClientRect();
+  const clickX = touch.clientX - rect.left + camera.x;
+  const clickY = touch.clientY - rect.top + camera.y;
+  
+  for (const planet of planets) {
+    const dist = distance(clickX, clickY, planet.x, planet.y);
+    if (dist < planet.radius + 30) {
+      moveTarget = { x: planet.x, y: planet.y, planet: planet };
+      isMovingToTarget = true;
+      return;
+    }
+  }
+  
+  moveTarget = { x: clickX, y: clickY, planet: null };
+  isMovingToTarget = true;
 
 // 게임 루프
 function gameLoop() {
@@ -200,10 +268,36 @@ function gameLoop() {
 function update() {
   // 이동 방향 계산
   let dx = 0, dy = 0;
+  
+  // 키보드 입력이 있으면 클릭 이동 취소
+  if (keys.up || keys.down || keys.left || keys.right) {
+    isMovingToTarget = false;
+    moveTarget = null;
+  }
+  
   if (keys.up) dy -= 1;
   if (keys.down) dy += 1;
   if (keys.left) dx -= 1;
   if (keys.right) dx += 1;
+  
+  // 클릭 이동 처리
+  if (isMovingToTarget && moveTarget) {
+    const distToTarget = distance(player.x, player.y, moveTarget.x, moveTarget.y);
+    
+    if (distToTarget < 10) {
+      // 목표에 도착
+      isMovingToTarget = false;
+      if (moveTarget.planet) {
+        // 행성에 도착하면 자동으로 퀘스트 열기
+        nearPlanet = moveTarget.planet;
+      }
+      moveTarget = null;
+    } else {
+      // 목표를 향해 이동
+      dx = (moveTarget.x - player.x) / distToTarget;
+      dy = (moveTarget.y - player.y) / distToTarget;
+    }
+  }
   
   // 정규화
   if (dx !== 0 || dy !== 0) {
@@ -218,6 +312,9 @@ function update() {
   // 이동
   player.x += dx * player.speed;
   player.y += dy * player.speed;
+  
+  // 유성 업데이트
+  updateShootingStars();
   
   // 맵 경계
   player.x = Math.max(50, Math.min(MAP_WIDTH - 50, player.x));
@@ -259,19 +356,74 @@ function update() {
   }
 }
 
+// 유성 업데이트
+function updateShootingStars() {
+  // 가끔 새 유성 생성
+  if (Math.random() < 0.005 && shootingStars.length < 3) {
+    shootingStars.push({
+      x: Math.random() * MAP_WIDTH,
+      y: Math.random() * 200,
+      vx: (Math.random() - 0.5) * 15 - 5,
+      vy: Math.random() * 10 + 5,
+      life: 1,
+      length: Math.random() * 80 + 40
+    });
+  }
+  
+  // 유성 이동 및 소멸
+  shootingStars = shootingStars.filter(s => {
+    s.x += s.vx;
+    s.y += s.vy;
+    s.life -= 0.02;
+    return s.life > 0 && s.y < MAP_HEIGHT;
+  });
+}
+
 // 렌더링
 function render() {
-  // 배경
-  ctx.fillStyle = '#0a0a18';
+  // 우주 배경 그라데이션
+  const bgGradient = ctx.createRadialGradient(
+    canvas.width / 2, canvas.height / 2, 0,
+    canvas.width / 2, canvas.height / 2, Math.max(canvas.width, canvas.height)
+  );
+  bgGradient.addColorStop(0, '#0d0d20');
+  bgGradient.addColorStop(0.5, '#080815');
+  bgGradient.addColorStop(1, '#020208');
+  ctx.fillStyle = bgGradient;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
+  
+  // 먼 은하들 (매우 희미하게)
+  for (const galaxy of galaxies) {
+    const screenX = galaxy.x - camera.x * 0.3; // 패럴랙스 효과
+    const screenY = galaxy.y - camera.y * 0.3;
+    
+    ctx.save();
+    ctx.translate(screenX, screenY);
+    ctx.rotate(galaxy.rotation);
+    ctx.globalAlpha = 0.15;
+    
+    // 나선 은하 모양
+    const galaxyGradient = ctx.createRadialGradient(0, 0, 0, 0, 0, galaxy.radius);
+    galaxyGradient.addColorStop(0, galaxy.color);
+    galaxyGradient.addColorStop(0.5, galaxy.color + '40');
+    galaxyGradient.addColorStop(1, 'transparent');
+    ctx.fillStyle = galaxyGradient;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, galaxy.radius, galaxy.radius * 0.4, 0, 0, Math.PI * 2);
+    ctx.fill();
+    
+    ctx.globalAlpha = 1;
+    ctx.restore();
+  }
   
   // 성운 (배경 장식)
   for (const neb of nebulae) {
-    const screenX = neb.x - camera.x;
-    const screenY = neb.y - camera.y;
+    const screenX = neb.x - camera.x * 0.7; // 약간의 패럴랙스
+    const screenY = neb.y - camera.y * 0.7;
     
     const gradient = ctx.createRadialGradient(screenX, screenY, 0, screenX, screenY, neb.radius);
     gradient.addColorStop(0, neb.color);
+    gradient.addColorStop(0.6, neb.color.replace(')', ', 0.5)').replace('rgba', 'rgba'));
     gradient.addColorStop(1, 'transparent');
     
     ctx.fillStyle = gradient;
@@ -281,17 +433,55 @@ function render() {
   // 별
   const time = Date.now() / 1000;
   for (const star of stars) {
-    const screenX = star.x - camera.x;
-    const screenY = star.y - camera.y;
+    const screenX = star.x - camera.x * 0.9; // 별도 약간 패럴랙스
+    const screenY = star.y - camera.y * 0.9;
     
     // 화면 밖이면 스킵
     if (screenX < -10 || screenX > canvas.width + 10 || screenY < -10 || screenY > canvas.height + 10) continue;
     
-    const twinkle = 0.5 + 0.5 * Math.sin(time * 2 + star.brightness * 10);
-    ctx.fillStyle = `rgba(255, 255, 255, ${star.brightness * twinkle})`;
+    const twinkle = 0.4 + 0.6 * Math.sin(time * star.twinkleSpeed + star.brightness * 10);
+    const alpha = star.brightness * twinkle;
+    
+    // 밝은 별은 약간 색상 추가
+    if (star.brightness > 0.8) {
+      ctx.fillStyle = `rgba(200, 220, 255, ${alpha})`;
+    } else if (star.brightness > 0.6) {
+      ctx.fillStyle = `rgba(255, 240, 220, ${alpha})`;
+    } else {
+      ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+    }
+    
     ctx.beginPath();
     ctx.arc(screenX, screenY, star.size, 0, Math.PI * 2);
     ctx.fill();
+    
+    // 아주 밝은 별은 빛나는 효과
+    if (star.brightness > 0.85 && star.size > 1.5) {
+      ctx.beginPath();
+      ctx.arc(screenX, screenY, star.size * 3, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255, 255, 255, ${alpha * 0.1})`;
+      ctx.fill();
+    }
+  }
+  
+  // 유성
+  for (const s of shootingStars) {
+    const screenX = s.x - camera.x;
+    const screenY = s.y - camera.y;
+    
+    const gradient = ctx.createLinearGradient(
+      screenX, screenY,
+      screenX - s.vx * 3, screenY - s.vy * 3
+    );
+    gradient.addColorStop(0, `rgba(255, 255, 255, ${s.life})`);
+    gradient.addColorStop(1, 'transparent');
+    
+    ctx.strokeStyle = gradient;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(screenX, screenY);
+    ctx.lineTo(screenX - s.vx * 3, screenY - s.vy * 3);
+    ctx.stroke();
   }
   
   // 궤도선 (행성들을 연결)
@@ -315,6 +505,27 @@ function render() {
   
   // 플레이어
   drawPlayer();
+  
+  // 클릭 이동 목표 표시
+  if (isMovingToTarget && moveTarget) {
+    const targetX = moveTarget.x - camera.x;
+    const targetY = moveTarget.y - camera.y;
+    
+    ctx.strokeStyle = 'rgba(255, 215, 0, 0.5)';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([5, 5]);
+    ctx.beginPath();
+    ctx.moveTo(player.x - camera.x, player.y - camera.y);
+    ctx.lineTo(targetX, targetY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    
+    // 목표 지점 마커
+    ctx.fillStyle = 'rgba(255, 215, 0, 0.3)';
+    ctx.beginPath();
+    ctx.arc(targetX, targetY, 15 + Math.sin(Date.now() / 200) * 5, 0, Math.PI * 2);
+    ctx.fill();
+  }
   
   // 미니맵
   renderMinimap();
