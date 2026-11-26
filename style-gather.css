@@ -1,0 +1,1065 @@
+/* 진로 퀘스트 - 게더타운 스타일 우주 탐험 */
+
+:root {
+  --bg-dark: #0a0a18;
+  --bg-card: #1a1a35;
+  --text-light: #e8e8f0;
+  --text-muted: #9090b0;
+  --accent-gold: #ffd700;
+  --accent-purple: #a855f7;
+  --accent-blue: #60a5fa;
+  --accent-pink: #f472b6;
+  --accent-green: #4ade80;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--bg-dark);
+  color: var(--text-light);
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* 인트로 */
+.intro {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at top, #1a1a3e 0%, transparent 50%),
+              radial-gradient(ellipse at bottom, #2d1b4e 0%, transparent 50%),
+              linear-gradient(180deg, #0a0a18 0%, #1a0a2e 50%, #0a0a18 100%);
+  position: relative;
+  padding: 2rem;
+}
+
+.stars {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(1px 1px at 10% 20%, white 1px, transparent 0),
+              radial-gradient(1.5px 1.5px at 50% 10%, white 1px, transparent 0),
+              radial-gradient(1px 1px at 80% 40%, white 1px, transparent 0);
+  background-size: 200px 200px;
+  animation: twinkle 4s ease-in-out infinite;
+  opacity: 0.6;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 0.9; }
+}
+
+.twinkling {
+  position: absolute;
+  inset: 0;
+  background-size: 300px 300px;
+  animation: move-twinkle 200s linear infinite;
+  opacity: 0.3;
+}
+
+.intro-content {
+  text-align: center;
+  z-index: 1;
+  max-width: 600px;
+}
+
+.intro-badge {
+  display: inline-block;
+  padding: 0.5rem 1.5rem;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(96, 165, 250, 0.3));
+  border: 1px solid var(--accent-purple);
+  border-radius: 50px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent-gold);
+  margin-bottom: 1.5rem;
+}
+
+.intro-title {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(2rem, 8vw, 4rem);
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent-gold), #fff6a3);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1rem;
+}
+
+.intro-subtitle {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  line-height: 1.8;
+  margin-bottom: 2rem;
+}
+
+.controls-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.key-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.key {
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 6px;
+  font-family: monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-light);
+}
+
+.hint-text {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.character-select {
+  margin-bottom: 1.5rem;
+}
+
+.character-select h3 {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  color: var(--accent-gold);
+}
+
+.character-options {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.char-option { cursor: pointer; }
+.char-option input { display: none; }
+
+.char-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  background: rgba(255,255,255,0.05);
+  border: 2px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  font-size: 1.8rem;
+  transition: all 0.2s;
+}
+
+.char-option input:checked + .char-card {
+  border-color: var(--accent-purple);
+  background: rgba(168, 85, 247, 0.2);
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+  transform: scale(1.1);
+}
+
+.char-card:hover {
+  border-color: var(--accent-purple);
+}
+
+.nickname-input {
+  margin-bottom: 1.5rem;
+}
+
+.nickname-input input {
+  padding: 0.75rem 1.5rem;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 30px;
+  font-size: 1rem;
+  color: var(--text-light);
+  text-align: center;
+  width: 200px;
+}
+
+.nickname-input input:focus {
+  outline: none;
+  border-color: var(--accent-purple);
+}
+
+.nickname-input input::placeholder {
+  color: var(--text-muted);
+}
+
+.start-btn {
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+  color: white;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 0 30px rgba(168, 85, 247, 0.4);
+  transition: all 0.3s;
+}
+
+.start-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 0 50px rgba(168, 85, 247, 0.6);
+}
+
+/* 게임 화면 */
+.game-screen {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-dark);
+}
+
+/* HUD */
+.game-hud {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(180deg, rgba(10,10,24,0.95) 0%, transparent 100%);
+  z-index: 100;
+}
+
+.hud-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.player-name {
+  font-weight: 700;
+  color: var(--accent-gold);
+}
+
+.progress-mini {
+  padding: 0.3rem 0.8rem;
+  background: rgba(255,255,255,0.1);
+  border-radius: 20px;
+  font-size: 0.85rem;
+}
+
+.hud-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.interaction-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(168, 85, 247, 0.3);
+  border: 1px solid var(--accent-purple);
+  border-radius: 30px;
+  animation: pulse-hint 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-hint {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.hint-planet {
+  font-weight: 600;
+  color: var(--accent-gold);
+}
+
+.hint-key {
+  padding: 0.2rem 0.5rem;
+  background: rgba(255,255,255,0.2);
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.8rem;
+}
+
+.menu-btn {
+  width: 44px;
+  height: 44px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 10px;
+  font-size: 1.3rem;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.menu-btn:hover {
+  background: rgba(168, 85, 247, 0.3);
+  border-color: var(--accent-purple);
+}
+
+/* 맵 래퍼 */
+.map-wrapper {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+#space-map {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* 미니맵 */
+.minimap {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 150px;
+  height: 150px;
+  background: rgba(10, 10, 24, 0.9);
+  border: 2px solid rgba(168, 85, 247, 0.5);
+  border-radius: 10px;
+  overflow: hidden;
+  z-index: 50;
+}
+
+#minimap-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+/* 모바일 조작 */
+.mobile-controls {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 50;
+}
+
+@media (max-width: 768px) {
+  .mobile-controls {
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+  }
+}
+
+.joystick-area {
+  display: grid;
+  grid-template-columns: repeat(3, 50px);
+  grid-template-rows: repeat(3, 50px);
+  gap: 4px;
+}
+
+.joy-btn {
+  width: 50px;
+  height: 50px;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 10px;
+  font-size: 1.2rem;
+  color: var(--text-light);
+  cursor: pointer;
+}
+
+.joy-up { grid-column: 2; grid-row: 1; }
+.joy-left { grid-column: 1; grid-row: 2; }
+.joy-right { grid-column: 3; grid-row: 2; }
+.joy-down { grid-column: 2; grid-row: 3; }
+
+.joy-btn:active {
+  background: rgba(168, 85, 247, 0.5);
+}
+
+.action-btn {
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+  border: none;
+  border-radius: 15px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: white;
+  cursor: pointer;
+}
+
+/* 메뉴 패널 */
+.menu-panel {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 10, 24, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.menu-content {
+  background: var(--bg-card);
+  border: 2px solid var(--accent-purple);
+  border-radius: 20px;
+  padding: 2rem;
+  min-width: 300px;
+  text-align: center;
+}
+
+.menu-content h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--accent-gold);
+}
+
+.progress-detail {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.progress-detail h4 {
+  margin-bottom: 0.75rem;
+  color: var(--text-muted);
+}
+
+.planet-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.planet-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: rgba(255,255,255,0.05);
+  border-radius: 8px;
+}
+
+.planet-item.completed {
+  background: rgba(74, 222, 128, 0.15);
+}
+
+.planet-item.locked {
+  opacity: 0.5;
+}
+
+.menu-item {
+  width: 100%;
+  padding: 1rem;
+  margin-top: 0.5rem;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  font-size: 1rem;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.menu-item:hover {
+  background: rgba(168, 85, 247, 0.2);
+  border-color: var(--accent-purple);
+}
+
+/* 퀘스트 모달 */
+.quest-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 10, 24, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 300;
+  padding: 1rem;
+  backdrop-filter: blur(8px);
+}
+
+.quest-content {
+  background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-dark) 100%);
+  border: 2px solid var(--accent-purple);
+  border-radius: 24px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 85vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 60px rgba(168, 85, 247, 0.3);
+}
+
+.quest-header {
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(96, 165, 250, 0.2));
+  border-bottom: 1px solid rgba(168, 85, 247, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.quest-badge {
+  padding: 0.3rem 0.8rem;
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+  color: white;
+  border-radius: 15px;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.quest-header h2 {
+  flex: 1;
+  font-size: 1.2rem;
+}
+
+.quest-close {
+  width: 36px;
+  height: 36px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 50%;
+  font-size: 1.3rem;
+  color: var(--text-light);
+  cursor: pointer;
+}
+
+.quest-close:hover {
+  background: rgba(239, 68, 68, 0.3);
+}
+
+.quest-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem;
+}
+
+.quest-intro {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: var(--text-muted);
+}
+
+.info-box {
+  background: rgba(74, 222, 128, 0.1);
+  border: 1px solid var(--accent-green);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.info-box h3 {
+  color: var(--accent-green);
+  margin-bottom: 0.75rem;
+}
+
+.info-box ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.info-box li {
+  padding-left: 1.25rem;
+  position: relative;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.info-box li::before {
+  content: '✧';
+  position: absolute;
+  left: 0;
+  color: var(--accent-gold);
+}
+
+/* 퀴즈 */
+.quiz-section h3 {
+  color: var(--accent-gold);
+  margin-bottom: 1rem;
+}
+
+.quiz-item {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.quiz-question {
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.quiz-option {
+  padding: 0.75rem 1rem;
+  background: rgba(255,255,255,0.05);
+  border: 2px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  text-align: left;
+  font-size: 0.9rem;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.quiz-option:hover:not(:disabled) {
+  border-color: var(--accent-purple);
+  background: rgba(168, 85, 247, 0.1);
+}
+
+.quiz-option.correct {
+  border-color: var(--accent-green);
+  background: rgba(74, 222, 128, 0.15);
+  color: var(--accent-green);
+}
+
+.quiz-option.wrong {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.quiz-feedback {
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* 폼 */
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  background: rgba(255,255,255,0.05);
+  border: 2px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: var(--text-light);
+  resize: none;
+}
+
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--accent-purple);
+}
+
+.form-group textarea::placeholder {
+  color: var(--text-muted);
+}
+
+/* 계열 선택 */
+.select-section h3 {
+  color: var(--accent-gold);
+  margin: 1.5rem 0 0.75rem;
+}
+
+.track-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 0.75rem;
+}
+
+.track-option { cursor: pointer; }
+.track-option input { display: none; }
+
+.track-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 0.5rem;
+  background: rgba(255,255,255,0.03);
+  border: 2px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  transition: all 0.2s;
+}
+
+.track-option input:checked + .track-card {
+  border-color: var(--accent-purple);
+  background: rgba(168, 85, 247, 0.15);
+}
+
+.track-icon { font-size: 1.5rem; margin-bottom: 0.3rem; }
+.track-name { font-size: 0.9rem; font-weight: 600; }
+
+/* 역량 체크 */
+.competency-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.competency-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: rgba(255,255,255,0.03);
+  border-radius: 10px;
+}
+
+.competency-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.competency-icon { font-size: 1.3rem; }
+
+.rating-stars {
+  display: flex;
+  gap: 0.2rem;
+}
+
+.star {
+  font-size: 1.3rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  opacity: 0.3;
+  transition: all 0.15s;
+  padding: 0;
+  filter: grayscale(1);
+}
+
+.star.active {
+  opacity: 1;
+  filter: none;
+}
+
+.star:hover { transform: scale(1.2); }
+
+/* 교육과정표 */
+.curriculum-table {
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+}
+
+.subject-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.subject-table th,
+.subject-table td {
+  padding: 0.6rem;
+  border: 1px solid rgba(255,255,255,0.1);
+  text-align: left;
+}
+
+.subject-table th {
+  background: rgba(168, 85, 247, 0.2);
+  font-weight: 700;
+}
+
+/* 과목 선택 */
+.subject-selection h3 {
+  color: var(--accent-gold);
+  margin: 1rem 0 0.5rem;
+  font-size: 0.95rem;
+}
+
+.subject-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.subject-chip { cursor: pointer; }
+.subject-chip input { display: none; }
+
+.subject-chip input + span {
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 15px;
+  font-size: 0.8rem;
+  transition: all 0.2s;
+}
+
+.subject-chip input:checked + span {
+  background: var(--accent-purple);
+  border-color: var(--accent-purple);
+  color: white;
+}
+
+/* 학업계획 */
+.plan-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.plan-year, .plan-goal {
+  background: rgba(255,255,255,0.03);
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.plan-year h3, .plan-goal h3 {
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  color: var(--accent-gold);
+}
+
+.plan-section textarea {
+  width: 100%;
+  padding: 0.6rem;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  color: var(--text-light);
+  resize: none;
+}
+
+.plan-section textarea:focus {
+  outline: none;
+  border-color: var(--accent-purple);
+}
+
+/* 퀘스트 푸터 */
+.quest-footer {
+  padding: 1rem 1.5rem;
+  background: rgba(0,0,0,0.3);
+  border-top: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.quest-progress {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.save-btn {
+  padding: 0.6rem 1.2rem;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 10px;
+  font-weight: 600;
+  color: var(--text-light);
+  cursor: pointer;
+}
+
+.save-btn:hover {
+  border-color: var(--accent-purple);
+}
+
+.quest-complete-btn {
+  padding: 0.6rem 1.2rem;
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.quest-complete-btn:disabled {
+  background: rgba(255,255,255,0.1);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+/* 완료 모달 */
+.complete-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 10, 24, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 400;
+}
+
+.complete-content {
+  background: var(--bg-card);
+  border: 2px solid var(--accent-gold);
+  padding: 2.5rem;
+  border-radius: 20px;
+  text-align: center;
+  max-width: 350px;
+  box-shadow: 0 0 60px rgba(255, 215, 0, 0.3);
+  animation: pop-in 0.4s ease;
+}
+
+@keyframes pop-in {
+  0% { transform: scale(0.5); opacity: 0; }
+  70% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.complete-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.complete-content h2 {
+  color: var(--accent-gold);
+  margin-bottom: 0.5rem;
+}
+
+.complete-content p {
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}
+
+.complete-btn {
+  padding: 0.75rem 2rem;
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* 최종 결과 모달 */
+.final-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 10, 24, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+  padding: 1rem;
+}
+
+.final-content {
+  background: var(--bg-card);
+  border: 2px solid var(--accent-gold);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 700px;
+  max-height: 85vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.final-header {
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(168, 85, 247, 0.2));
+  text-align: center;
+}
+
+.final-header h2 {
+  color: var(--accent-gold);
+  margin-bottom: 0.3rem;
+}
+
+.final-header p {
+  color: var(--text-muted);
+}
+
+.final-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem;
+}
+
+.final-section {
+  margin-bottom: 1.5rem;
+}
+
+.final-section h3 {
+  color: var(--accent-gold);
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.final-item {
+  padding: 0.75rem;
+  background: rgba(255,255,255,0.03);
+  border-radius: 10px;
+  margin-bottom: 0.5rem;
+}
+
+.final-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.4rem;
+}
+
+.final-tag {
+  padding: 0.2rem 0.6rem;
+  background: var(--accent-purple);
+  color: white;
+  border-radius: 15px;
+  font-size: 0.8rem;
+}
+
+.final-footer {
+  padding: 1rem 1.5rem;
+  background: rgba(0,0,0,0.3);
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.final-btn {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.final-btn.secondary {
+  background: rgba(255,255,255,0.1);
+}
+
+/* 반응형 */
+@media (max-width: 600px) {
+  .minimap {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .quest-content {
+    max-height: 90vh;
+  }
+  
+  .quest-body {
+    padding: 1rem;
+  }
+}

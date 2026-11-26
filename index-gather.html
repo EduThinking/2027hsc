@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0a0a18">
+  <meta name="description" content="진로 퀘스트 - 우주를 탐험하며 나만의 고교학점제 로드맵을 완성하세요!">
+  <title>진로 퀘스트 🚀 | 우주 탐험</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style-gather.css">
+</head>
+<body>
+  <!-- 인트로 화면 -->
+  <section class="intro" id="intro">
+    <div class="stars"></div>
+    <div class="twinkling"></div>
+    <div class="intro-content">
+      <div class="intro-badge">🚀 진로 우주탐험</div>
+      <h1 class="intro-title">CAREER QUEST</h1>
+      <p class="intro-subtitle">우주선을 조종해 6개의 행성을 탐험하고<br>나만의 진로 로드맵을 완성하세요!</p>
+      
+      <div class="controls-preview">
+        <div class="key-hint">
+          <span class="key">W</span><span class="key">A</span><span class="key">S</span><span class="key">D</span>
+          <span class="hint-text">또는 화살표 키로 이동</span>
+        </div>
+        <div class="key-hint">
+          <span class="key">SPACE</span>
+          <span class="hint-text">행성에 착륙</span>
+        </div>
+      </div>
+
+      <div class="character-select">
+        <h3>🚀 우주선 선택</h3>
+        <div class="character-options">
+          <label class="char-option">
+            <input type="radio" name="ship" value="🚀" checked>
+            <span class="char-card">🚀</span>
+          </label>
+          <label class="char-option">
+            <input type="radio" name="ship" value="🛸">
+            <span class="char-card">🛸</span>
+          </label>
+          <label class="char-option">
+            <input type="radio" name="ship" value="🛰️">
+            <span class="char-card">🛰️</span>
+          </label>
+          <label class="char-option">
+            <input type="radio" name="ship" value="🧑‍🚀">
+            <span class="char-card">🧑‍🚀</span>
+          </label>
+          <label class="char-option">
+            <input type="radio" name="ship" value="⭐">
+            <span class="char-card">⭐</span>
+          </label>
+          <label class="char-option">
+            <input type="radio" name="ship" value="☄️">
+            <span class="char-card">☄️</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="nickname-input">
+        <input type="text" id="nickname" placeholder="탐험가 이름 (선택)" maxlength="10">
+      </div>
+
+      <button class="start-btn" onclick="startGame()">
+        <span>🪐 탐험 시작!</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- 게임 화면 -->
+  <section class="game-screen" id="game" hidden>
+    <!-- HUD -->
+    <header class="game-hud">
+      <div class="hud-left">
+        <span class="player-name" id="player-name">탐험가</span>
+        <div class="progress-mini">
+          <span id="progress-count">0</span>/6 행성
+        </div>
+      </div>
+      <div class="hud-center">
+        <div class="interaction-hint" id="interaction-hint" hidden>
+          <span class="hint-planet" id="hint-planet-name">기초 행성</span>
+          <span class="hint-key">SPACE</span> 착륙
+        </div>
+      </div>
+      <div class="hud-right">
+        <button class="menu-btn" onclick="toggleMenu()">☰</button>
+      </div>
+    </header>
+
+    <!-- 우주 맵 (Canvas) -->
+    <div class="map-wrapper">
+      <canvas id="space-map"></canvas>
+      
+      <!-- 미니맵 -->
+      <div class="minimap" id="minimap">
+        <canvas id="minimap-canvas"></canvas>
+      </div>
+
+      <!-- 모바일 조이스틱 -->
+      <div class="mobile-controls" id="mobile-controls">
+        <div class="joystick-area">
+          <button class="joy-btn joy-up" data-dir="up">▲</button>
+          <button class="joy-btn joy-left" data-dir="left">◀</button>
+          <button class="joy-btn joy-right" data-dir="right">▶</button>
+          <button class="joy-btn joy-down" data-dir="down">▼</button>
+        </div>
+        <button class="action-btn" id="mobile-action">착륙</button>
+      </div>
+    </div>
+
+    <!-- 메뉴 패널 -->
+    <div class="menu-panel" id="menu-panel" hidden>
+      <div class="menu-content">
+        <h3>🎮 메뉴</h3>
+        <div class="progress-detail">
+          <h4>탐험 현황</h4>
+          <div class="planet-list" id="planet-list"></div>
+        </div>
+        <button class="menu-item" onclick="resetGame()">🔄 처음부터</button>
+        <button class="menu-item" onclick="toggleMenu()">✕ 닫기</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 퀘스트 모달들 (기존 것 재사용) -->
+  <div class="quest-modal" id="quest-1" hidden>
+    <div class="quest-content">
+      <div class="quest-header">
+        <div class="quest-badge">STAGE 1</div>
+        <h2>📘 고교학점제 이해하기</h2>
+        <button class="quest-close" onclick="closeQuest()">&times;</button>
+      </div>
+      <div class="quest-body">
+        <div class="quest-intro">
+          <p>고교학점제가 무엇인지 알아보고, 퀴즈를 통해 확인해보세요!</p>
+        </div>
+        <div class="info-box">
+          <h3>💡 고교학점제란?</h3>
+          <ul>
+            <li>학생이 <strong>진로에 따라 원하는 과목</strong>을 선택해서 이수</li>
+            <li>총 <strong>192학점</strong> 이수 시 졸업</li>
+            <li>공통과목(84학점) + 선택과목(90학점) + 창체(18학점)</li>
+            <li>선택과목: 일반선택 → 진로선택 → 융합선택</li>
+          </ul>
+        </div>
+        <div class="quiz-section">
+          <h3>🎯 퀴즈</h3>
+          <div class="quiz-item" data-quiz="1-1">
+            <p class="quiz-question">Q1. 고교학점제에서 졸업에 필요한 총 학점은?</p>
+            <div class="quiz-options">
+              <button class="quiz-option" data-answer="wrong">180학점</button>
+              <button class="quiz-option" data-answer="correct">192학점</button>
+              <button class="quiz-option" data-answer="wrong">200학점</button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-item" data-quiz="1-2">
+            <p class="quiz-question">Q2. 학생이 직접 선택할 수 있는 선택과목은 몇 학점?</p>
+            <div class="quiz-options">
+              <button class="quiz-option" data-answer="wrong">84학점</button>
+              <button class="quiz-option" data-answer="correct">90학점</button>
+              <button class="quiz-option" data-answer="wrong">100학점</button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-item" data-quiz="1-3">
+            <p class="quiz-question">Q3. 선택과목의 종류가 아닌 것은?</p>
+            <div class="quiz-options">
+              <button class="quiz-option" data-answer="wrong">일반선택</button>
+              <button class="quiz-option" data-answer="wrong">진로선택</button>
+              <button class="quiz-option" data-answer="correct">필수선택</button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+        </div>
+      </div>
+      <div class="quest-footer">
+        <div class="quest-progress"><span id="quiz-score-1">0</span> / 3 정답</div>
+        <button class="quest-complete-btn" id="complete-1" onclick="completeQuest(1)" disabled>✅ 클리어</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="quest-modal" id="quest-2" hidden>
+    <div class="quest-content">
+      <div class="quest-header">
+        <div class="quest-badge">STAGE 2</div>
+        <h2>🔍 나의 계열 탐색</h2>
+        <button class="quest-close" onclick="closeQuest()">&times;</button>
+      </div>
+      <div class="quest-body">
+        <div class="quest-intro"><p>나의 흥미와 적성을 파악하고, 맞는 계열을 찾아보세요!</p></div>
+        <div class="form-section">
+          <div class="form-group">
+            <label>✨ 어릴 때 꿈꿨던 것 3가지</label>
+            <textarea id="input-2-1" placeholder="예: 의사, 선생님, 유튜버..." rows="2"></textarea>
+          </div>
+          <div class="form-group">
+            <label>❤️ 시간 가는 줄 모르고 하는 활동</label>
+            <textarea id="input-2-2" placeholder="예: 게임, 코딩, 그림 그리기, 운동..." rows="2"></textarea>
+          </div>
+          <div class="form-group">
+            <label>💪 남들보다 잘한다고 느끼는 것</label>
+            <textarea id="input-2-3" placeholder="예: 발표, 글쓰기, 계산, 사람들과 어울리기..." rows="2"></textarea>
+          </div>
+        </div>
+        <div class="select-section">
+          <h3>🎯 관심 있는 계열 선택</h3>
+          <div class="track-options">
+            <label class="track-option"><input type="checkbox" name="track" value="인문"><span class="track-card"><span class="track-icon">📚</span><span class="track-name">인문</span></span></label>
+            <label class="track-option"><input type="checkbox" name="track" value="사회"><span class="track-card"><span class="track-icon">🌍</span><span class="track-name">사회</span></span></label>
+            <label class="track-option"><input type="checkbox" name="track" value="자연"><span class="track-card"><span class="track-icon">🔬</span><span class="track-name">자연</span></span></label>
+            <label class="track-option"><input type="checkbox" name="track" value="공학"><span class="track-card"><span class="track-icon">⚙️</span><span class="track-name">공학</span></span></label>
+            <label class="track-option"><input type="checkbox" name="track" value="예체능"><span class="track-card"><span class="track-icon">🎨</span><span class="track-name">예체능</span></span></label>
+            <label class="track-option"><input type="checkbox" name="track" value="교육"><span class="track-card"><span class="track-icon">👩‍🏫</span><span class="track-name">교육</span></span></label>
+          </div>
+        </div>
+      </div>
+      <div class="quest-footer">
+        <button class="save-btn" onclick="saveQuest(2)">💾 저장</button>
+        <button class="quest-complete-btn" id="complete-2" onclick="completeQuest(2)" disabled>✅ 클리어</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="quest-modal" id="quest-3" hidden>
+    <div class="quest-content">
+      <div class="quest-header">
+        <div class="quest-badge">STAGE 3</div>
+        <h2>💪 핵심역량 체크</h2>
+        <button class="quest-close" onclick="closeQuest()">&times;</button>
+      </div>
+      <div class="quest-body">
+        <div class="quest-intro"><p>나의 역량을 체크해보세요!</p></div>
+        <div class="competency-section">
+          <div class="competency-item" data-comp="communication">
+            <div class="competency-label"><span class="competency-icon">💬</span><span>의사소통</span></div>
+            <div class="rating-stars"><button class="star" data-val="1">⭐</button><button class="star" data-val="2">⭐</button><button class="star" data-val="3">⭐</button><button class="star" data-val="4">⭐</button><button class="star" data-val="5">⭐</button></div>
+          </div>
+          <div class="competency-item" data-comp="collaboration">
+            <div class="competency-label"><span class="competency-icon">🤝</span><span>협업</span></div>
+            <div class="rating-stars"><button class="star" data-val="1">⭐</button><button class="star" data-val="2">⭐</button><button class="star" data-val="3">⭐</button><button class="star" data-val="4">⭐</button><button class="star" data-val="5">⭐</button></div>
+          </div>
+          <div class="competency-item" data-comp="creativity">
+            <div class="competency-label"><span class="competency-icon">💡</span><span>창의적 사고</span></div>
+            <div class="rating-stars"><button class="star" data-val="1">⭐</button><button class="star" data-val="2">⭐</button><button class="star" data-val="3">⭐</button><button class="star" data-val="4">⭐</button><button class="star" data-val="5">⭐</button></div>
+          </div>
+          <div class="competency-item" data-comp="critical">
+            <div class="competency-label"><span class="competency-icon">🔍</span><span>비판적 사고</span></div>
+            <div class="rating-stars"><button class="star" data-val="1">⭐</button><button class="star" data-val="2">⭐</button><button class="star" data-val="3">⭐</button><button class="star" data-val="4">⭐</button><button class="star" data-val="5">⭐</button></div>
+          </div>
+          <div class="competency-item" data-comp="selfmanagement">
+            <div class="competency-label"><span class="competency-icon">📊</span><span>자기관리</span></div>
+            <div class="rating-stars"><button class="star" data-val="1">⭐</button><button class="star" data-val="2">⭐</button><button class="star" data-val="3">⭐</button><button class="star" data-val="4">⭐</button><button class="star" data-val="5">⭐</button></div>
+          </div>
+          <div class="competency-item" data-comp="knowledge">
+            <div class="competency-label"><span class="competency-icon">🌐</span><span>지식정보처리</span></div>
+            <div class="rating-stars"><button class="star" data-val="1">⭐</button><button class="star" data-val="2">⭐</button><button class="star" data-val="3">⭐</button><button class="star" data-val="4">⭐</button><button class="star" data-val="5">⭐</button></div>
+          </div>
+        </div>
+      </div>
+      <div class="quest-footer">
+        <button class="save-btn" onclick="saveQuest(3)">💾 저장</button>
+        <button class="quest-complete-btn" id="complete-3" onclick="completeQuest(3)" disabled>✅ 클리어</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="quest-modal" id="quest-4" hidden>
+    <div class="quest-content">
+      <div class="quest-header">
+        <div class="quest-badge">STAGE 4</div>
+        <h2>📋 교육과정표 읽기</h2>
+        <button class="quest-close" onclick="closeQuest()">&times;</button>
+      </div>
+      <div class="quest-body">
+        <div class="quest-intro"><p>교과 편제표를 이해하고, 과목 구조를 파악해보세요!</p></div>
+        <div class="curriculum-table">
+          <table class="subject-table">
+            <thead><tr><th>교과</th><th>공통</th><th>일반선택</th><th>진로선택</th></tr></thead>
+            <tbody>
+              <tr><td>국어</td><td>공통국어1,2</td><td>화법과언어, 문학</td><td>주제탐구독서</td></tr>
+              <tr><td>수학</td><td>공통수학1,2</td><td>대수, 미적분I</td><td>기하, AI수학</td></tr>
+              <tr><td>영어</td><td>공통영어1,2</td><td>영어I, 영어II</td><td>심화영어</td></tr>
+              <tr><td>사회</td><td>통합사회</td><td>세계시민과지리</td><td>정치, 경제</td></tr>
+              <tr><td>과학</td><td>통합과학</td><td>물리학, 화학</td><td>역학과에너지</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="quiz-section">
+          <h3>🎯 확인 퀴즈</h3>
+          <div class="quiz-item" data-quiz="4-1">
+            <p class="quiz-question">Q1. 공통과목과 선택과목의 차이는?</p>
+            <div class="quiz-options">
+              <button class="quiz-option" data-answer="correct">공통은 필수, 선택은 진로에 맞게</button>
+              <button class="quiz-option" data-answer="wrong">둘 다 필수 이수</button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-item" data-quiz="4-2">
+            <p class="quiz-question">Q2. 진로선택 과목은 언제 주로 이수?</p>
+            <div class="quiz-options">
+              <button class="quiz-option" data-answer="wrong">1학년 때</button>
+              <button class="quiz-option" data-answer="correct">2-3학년 때 진로에 맞게</button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+        </div>
+      </div>
+      <div class="quest-footer">
+        <div class="quest-progress"><span id="quiz-score-4">0</span> / 2 정답</div>
+        <button class="quest-complete-btn" id="complete-4" onclick="completeQuest(4)" disabled>✅ 클리어</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="quest-modal" id="quest-5" hidden>
+    <div class="quest-content">
+      <div class="quest-header">
+        <div class="quest-badge">STAGE 5</div>
+        <h2>📚 과목 선택하기</h2>
+        <button class="quest-close" onclick="closeQuest()">&times;</button>
+      </div>
+      <div class="quest-body">
+        <div class="quest-intro"><p>선택한 계열에 맞는 과목을 선택해보세요!</p></div>
+        <div class="subject-selection">
+          <h3>📖 일반선택 (3개)</h3>
+          <div class="subject-grid" id="general-subjects">
+            <label class="subject-chip"><input type="checkbox" name="general" value="화법과언어"> 화법과언어</label>
+            <label class="subject-chip"><input type="checkbox" name="general" value="문학"> 문학</label>
+            <label class="subject-chip"><input type="checkbox" name="general" value="대수"> 대수</label>
+            <label class="subject-chip"><input type="checkbox" name="general" value="미적분I"> 미적분I</label>
+            <label class="subject-chip"><input type="checkbox" name="general" value="영어I"> 영어I</label>
+            <label class="subject-chip"><input type="checkbox" name="general" value="물리학"> 물리학</label>
+            <label class="subject-chip"><input type="checkbox" name="general" value="화학"> 화학</label>
+            <label class="subject-chip"><input type="checkbox" name="general" value="생명과학"> 생명과학</label>
+          </div>
+          <h3>🎯 진로선택 (3개)</h3>
+          <div class="subject-grid" id="career-subjects">
+            <label class="subject-chip"><input type="checkbox" name="career" value="기하"> 기하</label>
+            <label class="subject-chip"><input type="checkbox" name="career" value="AI수학"> AI수학</label>
+            <label class="subject-chip"><input type="checkbox" name="career" value="심화영어"> 심화영어</label>
+            <label class="subject-chip"><input type="checkbox" name="career" value="정치"> 정치</label>
+            <label class="subject-chip"><input type="checkbox" name="career" value="경제"> 경제</label>
+            <label class="subject-chip"><input type="checkbox" name="career" value="프로그래밍"> 프로그래밍</label>
+          </div>
+          <h3>⚡ 융합선택 (2개)</h3>
+          <div class="subject-grid" id="fusion-subjects">
+            <label class="subject-chip"><input type="checkbox" name="fusion" value="실용통계"> 실용통계</label>
+            <label class="subject-chip"><input type="checkbox" name="fusion" value="여행지리"> 여행지리</label>
+            <label class="subject-chip"><input type="checkbox" name="fusion" value="사회문제탐구"> 사회문제탐구</label>
+            <label class="subject-chip"><input type="checkbox" name="fusion" value="과학의역사"> 과학의역사</label>
+          </div>
+        </div>
+      </div>
+      <div class="quest-footer">
+        <button class="save-btn" onclick="saveQuest(5)">💾 저장</button>
+        <button class="quest-complete-btn" id="complete-5" onclick="completeQuest(5)" disabled>✅ 클리어</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="quest-modal" id="quest-6" hidden>
+    <div class="quest-content">
+      <div class="quest-header">
+        <div class="quest-badge">STAGE 6</div>
+        <h2>📝 학업계획서 작성</h2>
+        <button class="quest-close" onclick="closeQuest()">&times;</button>
+      </div>
+      <div class="quest-body">
+        <div class="quest-intro"><p>3년 학업계획을 작성해보세요!</p></div>
+        <div class="plan-section">
+          <div class="plan-year"><h3>📅 1학년</h3><textarea id="plan-year1" placeholder="1학년 때 중점적으로 할 것..." rows="2"></textarea></div>
+          <div class="plan-year"><h3>📅 2학년</h3><textarea id="plan-year2" placeholder="2학년 때 선택할 과목, 활동..." rows="2"></textarea></div>
+          <div class="plan-year"><h3>📅 3학년</h3><textarea id="plan-year3" placeholder="3학년 때 심화할 분야..." rows="2"></textarea></div>
+          <div class="plan-goal"><h3>🎯 진로 목표</h3><textarea id="plan-goal" placeholder="궁극적인 진로 목표..." rows="2"></textarea></div>
+        </div>
+      </div>
+      <div class="quest-footer">
+        <button class="save-btn" onclick="saveQuest(6)">💾 저장</button>
+        <button class="quest-complete-btn" id="complete-6" onclick="completeQuest(6)" disabled>🎉 완료!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 완료 모달 -->
+  <div class="complete-modal" id="complete-modal" hidden>
+    <div class="complete-content">
+      <div class="complete-icon">🎉</div>
+      <h2>축하해요!</h2>
+      <p id="complete-message">행성 탐험 완료!</p>
+      <button class="complete-btn" onclick="closeComplete()">계속 탐험하기 →</button>
+    </div>
+  </div>
+
+  <!-- 최종 결과 모달 -->
+  <div class="final-modal" id="final-modal" hidden>
+    <div class="final-content">
+      <div class="final-header">
+        <h2>🏆 모든 행성 탐험 완료!</h2>
+        <p>나만의 진로 로드맵이 완성되었어요</p>
+      </div>
+      <div class="final-body" id="final-body"></div>
+      <div class="final-footer">
+        <button class="final-btn" onclick="downloadResult()">📥 결과 저장</button>
+        <button class="final-btn secondary" onclick="closeFinal()">닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="main-gather.js"></script>
+</body>
+</html>
